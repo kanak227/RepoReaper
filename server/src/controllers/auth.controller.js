@@ -6,8 +6,6 @@ const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const redirectUri = "http://localhost:3000/auth/github/callback";
 
-
-
 export const signup =  (req, res) => {
     try {
           const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=repo,delete_repo&redirect_uri=${redirectUri}`;
