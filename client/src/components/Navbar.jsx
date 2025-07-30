@@ -1,0 +1,34 @@
+import React from 'react'
+import Blob from './decos/blob'
+import Button from './decos/Button'
+import { Github } from 'lucide-react'
+
+const Navbar = () => {
+
+  const handleLogin = ()=>{
+    window.location.href = "http://localhost:3000/auth/github";
+  }
+  return (
+    <div>
+        
+      <div className='w-full flex py-4  p-3 justify-between items-center bg-black'>
+        
+        {/* Logo on left-side */}
+        <div className='flex justify-center items-center sm:px-10 cursor-pointer'>
+            <div>
+                <img className='w-16' src="/logo.png" alt="" />
+            </div>
+            <span className='text-white  font-semibold text-2xl opacity-75'>Repo<span className='text-white'>Reaper</span> </span>
+        </div>
+
+        {/* Right side login*/}
+        <div className='sm:pr-10'>
+            <Button text="Login" icon={Github} onClick={handleLogin} />
+        </div>
+      </div>
+
+    </div>
+  )
+}
+
+export default Navbar
