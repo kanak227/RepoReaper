@@ -9,13 +9,13 @@ import { useAuthStore } from '../store/auth.store';
 
 
 const Home = () => {
-  const { Authentication } = useAuthStore();
+  const { loginwithGithub } = useAuthStore();
   const handleLogin = () => {
-    Authentication();
+    loginwithGithub();
   };
 
   return (
-    <div className='bg-black font-sans min-h-screen'>
+    <div className=' min-h-screen'>
     <Navbar/>
     
     {/** Hero section */}

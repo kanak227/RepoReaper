@@ -4,20 +4,22 @@ import api from "../utils/api";
 export const useAuthStore = create((set) => ({
     isAuthenticated: false,
     user: null,
+    isLoading: false,
 
-    Authentication : async () => {
-        try{
-            const res = await api.get('/auth/github');
-            set({ isAuthenticated: true, user: res.data });
-            
-        }
-        catch(err){
-            set({ isAuthenticated: false, user: null });
-        }
-        finally{
-            set({ isLoading: false });
-        }
-    }
+    loginwithGithub: ()=>{
+        
+        window.location.href = `${import.meta.env.VITE_API_URL}/auth/github`;
+    },
+
+    // fetchUser: async ()=>{
+    //     set({ isLoading: true });
+    //     try {
+    //         const res = await api.get('/auth/me'); 
+    //         set({ isAuthenticated: true, user: res.data, isLoading: false });
+    //     } catch (err) {
+    //         set({ isAuthenticated: false, user: null, isLoading: false });
+    //     }
+    // }
 
 
     }));

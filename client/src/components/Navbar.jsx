@@ -2,11 +2,14 @@ import React from 'react'
 import Blob from './decos/blob'
 import Button from './decos/Button'
 import { Github } from 'lucide-react'
+import { useAuthStore } from '../store/auth.store'
+
 
 const Navbar = () => {
+  const {loginwithGithub} = useAuthStore();
 
   const handleLogin = ()=>{
-    window.location.href = "http://localhost:3000/auth/github";
+    loginwithGithub();
   }
   return (
     <div>

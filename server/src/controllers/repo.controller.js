@@ -3,26 +3,31 @@ import axios from 'axios';
 export const getList = async (req, res) => {
   try {
     const token = req.session.token;
+
     const { data: repos } = await axios.get('https://api.github.com/user/repos', {
       headers: {
         Authorization: `token ${token}`,
         Accept: 'application/vnd.github+json',
       },
       params: {
-        per_page: 100, // adjust as needed
+        per_page: 100, 
         affiliation: 'owner',
       },
     });
 
-    // Send minimal data to frontend
     const simplifiedRepos = repos.map(repo => ({
       name: repo.name,
       full_name: repo.full_name,
       private: repo.private,
+      user: repo.owner.login,
       id: repo.id,
+      fork: repo.fork,
+      avatar: repo.owner.avatar_url,
     }));
+    const username = repos[0]?.owner?.login;
+    const avatar = repos[0]?.owner?.avatar_url;
 
-    res.json(simplifiedRepos);
+    res.json({repos:simplifiedRepos , user:username , avatar:avatar});
   } catch (error) {
     console.error('Error fetching repos:', error.message);
     res.status(500).json({ error: 'Failed to fetch repositories' });
@@ -49,10 +54,10 @@ export const deleteRepo =  async (req, res) => {
         },
       });
 
-      console.log(`✅ Deleted: ${fullName}`);
+      console.log(`Deleted: ${fullName}`);
       results.push({ repo: fullName, status: 'deleted' });
     } catch (error) {
-      console.error(`❌ Failed to delete ${fullName}:`, error.response?.data || error.message);
+      console.error(`Failed to delete ${fullName}:`, error.response?.data || error.message);
       results.push({
         repo: fullName,
         status: 'failed',

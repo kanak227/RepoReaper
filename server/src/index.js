@@ -13,22 +13,21 @@ const PORT = process.env.PORT || 3000;
 
 // CORS settings for frontend (React on port 5173)
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL, // Use env variable for frontend URL
   credentials: true,
 }));
 
-// Parse JSON bodies
 app.use(express.json());
 
-// Express session middleware
 app.use(session({
   secret: process.env.SESSION_SECRET || 'reapersecret',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,            // Set to true in production with HTTPS
+    secure: process.env.NODE_ENV === 'production', // true in production
     httpOnly: true,
-    maxAge: 1000 * 60 * 60    // 1 hour
+    sameSite: 'lax', // Prevent CSRF
+    maxAge: 1000 * 60 * 60
   },
 }));
 

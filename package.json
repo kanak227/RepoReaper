@@ -1,0 +1,22 @@
+{
+  "name": "reporeaper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build" : "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
+    "start" : "npm run start --prefix server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kanak227/RepoReaper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kanak227/RepoReaper/issues"
+  },
+  "homepage": "https://github.com/kanak227/RepoReaper#readme"
+}

@@ -4,7 +4,7 @@ dotenv.config()
 
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-const redirectUri = "http://localhost:3000/auth/github/callback";
+const redirectUri = `${process.env.API_URL}/auth/github/callback`;
 
 export const signup =  (req, res) => {
     try {
@@ -18,7 +18,6 @@ export const signup =  (req, res) => {
 
 export const callback = async (req, res) => {
   const code = req.query.code;
-
   if (!code) {
     return res.status(400).send('No code found in callback');
   }
@@ -44,7 +43,7 @@ export const callback = async (req, res) => {
     }
 
     req.session.token = accessToken;
-    res.redirect('http://localhost:5173/dashboard');
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
     
   } catch (error) {
     console.error('OAuth error:', error.response?.data || error.message);
