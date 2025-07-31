@@ -2,11 +2,11 @@ import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import path from 'path';
 import authRoutes from './routes/auth.js';
 import repoRoutes from './routes/repo.js';
 
-dotenv.config();
+
+dotenv.config()
 
 const app = express();
 const PORT = process.env.PORT || 3000;
