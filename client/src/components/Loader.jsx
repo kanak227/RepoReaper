@@ -7,12 +7,12 @@ const Loader = () => {
     <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white gap-6">
       {/* Animated RepoReaper text */}
       <motion.h1
-        className="text-4xl sm:text-5xl font-bold tracking-wider"
+        className="text-4xl sm:text-5xl font-bold tracking-tight"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        Repo<span className="text-blue-700">Reaper</span>
+        Repo<span className="bg-gradient-to-r from-blue-500 via-blue-600 to-purple-500 bg-clip-text text-transparent">Reaper</span>
       </motion.h1>
 
       {/* Animated rotating GitHub icon */}

@@ -4,8 +4,8 @@ import Button from '../components/decos/Button';
 import { ArrowRight, Github } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { parentVariants , childVariants } from '../animations/animation';
-import api from '../utils/api';
 import { useAuthStore } from '../store/auth.store';
+import Footer from '../components/Footer';
 
 
 const Home = () => {
@@ -15,7 +15,7 @@ const Home = () => {
   };
 
   return (
-    <div className=' min-h-screen'>
+    <div className=' min-h-[100vh]'>
     <Navbar/>
     
     {/** Hero section */}
@@ -29,7 +29,7 @@ const Home = () => {
         <motion.div 
         variants={childVariants}  
         className="max-w-[1200px] sm:px-3">
-        <h1 className="text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 text-transparent bg-clip-text tracking-tight">
+        <h1 className="text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-500 via-blue-600 to-purple-400 text-transparent bg-clip-text tracking-tight">
           On a mission to tidy up your <span className='text-white/70 mt-3'>Github</span>
         </h1>
         </motion.div>
@@ -54,6 +54,7 @@ const Home = () => {
 </motion.section>
 
       </div>
+      <Footer/>
 
     </div>
   );

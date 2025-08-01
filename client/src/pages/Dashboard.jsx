@@ -4,6 +4,8 @@ import RepoList from "../components/RepoList";
 import Loader from "../components/Loader";
 import DashboardNavbar from "../components/DashboardNavbar";
 import SearchBar from "../components/SearchBar";
+import Footer from "../components/Footer";
+import { Trash2 } from "lucide-react";
 
 
 const Dashboard = () => {
@@ -48,13 +50,6 @@ const Dashboard = () => {
     }
   };
 
-
-  // Debug: log repo structure
-  // Remove or comment out after debugging
-  if (repos.length > 0) {
-    console.log('Sample repo:', repos[0]);
-  }
-
   // Filter repos based on search, forked, and private
   const filteredRepos = repos.filter((repo) => {
     const searchLower = search.toLowerCase();
@@ -90,10 +85,10 @@ const Dashboard = () => {
   if (loading) return <Loader/>
 
   return (
-    <div className="min-h-screen  p-6 lg:px-20 md:px-10">
+    <div className="min-h-screen p-6 lg:px-20 md:px-10">
       <DashboardNavbar img={img} user={user} />
 
-      <div className="my-8 flex justify-between items-center">
+      <div className="my-8 mr-5 flex justify-between items-center">
         <div>
         <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-400 via-blue-600 to-purple-500 text-transparent bg-clip-text tracking-tight drop-shadow-lg">
           Time to clean up your <span className="text-white">GitHub</span>
@@ -107,18 +102,17 @@ const Dashboard = () => {
         <button
           onClick={handleDelete}
           disabled={selected.length === 0}
-          className={`px-4 py-3 font-semibold mt-3 rounded-lg shadow transition-all
+          className={`px-3 text-sm flex items-center gap-3 py-2 font-semibold mt-10 rounded-lg shadow transition-all
             ${
               selected.length === 0
-                ? "bg-red-500/60 text-white cursor-not-allowed"
-                : "bg-gradient-to-r from-red-600 via-red-650 to-red-600 hover:from-red-700 hover:to-pink-500 text-white hover:scale-105"
+                ? "bg-red-500/60 text-white cursor-not-allowed border border-red-500"
+                : "bg-red-600 hover:from-red-700  hover:bg-red-600/80 text-white transition-colors duration-300"
             }
           `}
         >
-          🗑️ Delete Selected Repos
+          <Trash2 className="h-5 w-5" /> <span className="hidden md:inline"> Delete</span>
         </button>
       </div>
-      
 
       {deleted && (
         <div className="bg-green-200/80 border border-green-400 text-green-900 p-3 mb-6 rounded-lg shadow transition-all animate-pulse">
@@ -141,13 +135,14 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="bg-white/5 rounded-xl shadow-lg p-6 mb-8 border border-blue-900/30">
+      <div className="rounded-xl shadow-lg p-4 mb-12 border border-blue-900">
         <RepoList repos={filteredRepos} selected={selected} setSelected={setSelected} />
       </div>
 
-      
+      <Footer/>
     </div>
   );
 };
+
 
 export default Dashboard;

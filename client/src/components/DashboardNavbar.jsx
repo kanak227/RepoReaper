@@ -14,7 +14,7 @@ const DashboardNavbar = ({img : img , user:user}) => {
             <div>
                     <img className='w-16' src="/logo.png" alt="" />
             </div>
-            <span className='text-white  font-semibold text-2xl opacity-75'>Repo<span className='text-white'>Reaper</span> </span>
+            <span className='text-white  font-semibold text-2xl opacity-75'>Repo<span className='bg-gradient-to-r from-blue-500 via-blue-600 to-purple-500 bg-clip-text text-transparent'>Reaper</span> </span>
             </a>
         </div>
 

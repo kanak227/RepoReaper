@@ -9,7 +9,13 @@ const RepoList = ({ repos, selected, setSelected }) => {
   };
 
   return (
-    <div className="max-h-[400px] overflow-y-auto">
+    <div
+      className="max-h-[400px] overflow-y-auto custom-scrollbar"
+      style={{
+        scrollbarWidth: 'thin',
+        scrollbarColor: '#3b82f6 #18181b',
+      }}
+    >
       <ul className="space-y-2">
         {repos.map((repo) => {
           const isSelected = selected.includes(repo.full_name);
@@ -17,8 +23,8 @@ const RepoList = ({ repos, selected, setSelected }) => {
             <li
               key={repo.id}
               onClick={() => toggleSelect(repo.full_name)}
-              className={`flex items-center justify-between p-3 rounded cursor-pointer transition-colors duration-200 ${
-                isSelected ? 'bg-red-300' : 'bg-gray-100 hover:bg-blue-200'
+              className={`flex text-white items-center justify-between p-3 rounded-md cursor-pointer transition-colors duration-200 ${
+                isSelected ? 'bg-green-300/10' : 'border-b border-white/30 hover:bg-blue-200/10'
               }`}
             >
               <span>{repo.name}</span>
