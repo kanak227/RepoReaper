@@ -50,3 +50,11 @@ export const callback = async (req, res) => {
     res.status(500).send('OAuth failed');
   }
 }
+
+export const checkAuth = (req, res) => {
+  if (req.session && req.session.token) {
+    res.json({ user: true });
+  } else {
+    res.json({ user: null });
+  }
+}

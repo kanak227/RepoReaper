@@ -7,9 +7,6 @@ import SearchBar from "../components/SearchBar";
 import Footer from "../components/Footer";
 import { AlertTriangle, Trash2 } from "lucide-react";
 
-
-
-
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [userConfirmation, setUserConfirmation] = useState('');
@@ -200,7 +197,9 @@ const Dashboard = () => {
 
       <div className="flex justify-between items-center px-3 text-sm opacity-70 mb-1">
           <p>Selected : {selected.length}</p>
-          <p>Total: {repos.length}</p>
+          <p>
+            Total: {filteredRepos.length}
+          </p>
         </div>
 
       <div className="rounded-xl shadow-lg p-4 mb-12 border border-blue-900">

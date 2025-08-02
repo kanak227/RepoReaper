@@ -3,16 +3,20 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Loader from "./components/Loader";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "./store/auth.store";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
 
   const [loading, setLoading] = useState(true);
-  useEffect(() =>{
-    const timer = setTimeout(() =>{
+  const checkAuth = useAuthStore((s) => s.checkAuth);
+  useEffect(() => {
+    const doCheck = async () => {
+      await checkAuth();
       setLoading(false);
-    } , 2000);
-    return () => clearTimeout(timer)
-  } , []);
+    };
+    doCheck();
+  }, [checkAuth]);
 
   if (loading) return <Loader />
 
@@ -21,7 +25,11 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
       </Routes>
     </BrowserRouter>
   );
