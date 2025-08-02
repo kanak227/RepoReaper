@@ -7,7 +7,8 @@ export const useAuthStore = create((set) => ({
     isLoading: false,
 
     loginwithGithub: () => {
-        window.location.href = `${import.meta.env.VITE_API_URL}/auth/github`;
+        // Use relative URL to work with both development and production environments
+        window.location.href = '/auth/github';
     },
 
     checkAuth: async () => {

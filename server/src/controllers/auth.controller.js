@@ -43,7 +43,7 @@ export const callback = async (req, res) => {
     }
 
     req.session.token = accessToken;
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+    res.redirect('/dashboard');
     
   } catch (error) {
     console.error('OAuth error:', error.response?.data || error.message);

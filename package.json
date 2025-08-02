@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "npm install && npm install --prefix client && npm run build --prefix client",
-    "start": "node server/src/index.js"
+    "start": "node server/src/index.js",
+    "dev": "nodemon server/src/index.js",
+    "dev:client": "npm run dev --prefix client",
+    "prod": "NODE_ENV=production node server/src/index.js",
+    "setup": "node setup-env.js"
   },
   "keywords": [],
   "author": "",
