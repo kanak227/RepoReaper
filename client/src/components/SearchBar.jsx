@@ -14,7 +14,7 @@ const SearchBar = ({
   onPriv
 }) => {
   return (
-    <div className="w-full px-2 md:px-5">
+    <div className="w-full px-2">
       <div className="mb-3 flex flex-col gap-3 md:gap-4 lg:flex-row lg:items-center py-3 rounded-lg shadow-lg justify-between">
         <div className="relative flex items-center w-full lg:w-auto flex-1">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 pointer-events-none">
@@ -22,7 +22,7 @@ const SearchBar = ({
           </span>
           <input
             type="text"
-            className="lg:w-3/4 w-full h-10 pl-10 pr-4 rounded-lg border border-blue-700 bg-zinc-900/10 text-white placeholder:text-white focus:outline-none focus:ring-1 focus:ring-blue-400 transition-all duration-200 shadow-sm transition-colors"
+            className="w-full h-10 pl-10 pr-4 rounded-lg border border-blue-700 bg-zinc-900/10 text-white placeholder:text-white focus:outline-none focus:ring-1 focus:ring-blue-400 transition-all duration-200 shadow-sm transition-colors"
             placeholder="Search repositories..."
             value={search}
             onChange={onSearch}
