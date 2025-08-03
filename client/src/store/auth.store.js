@@ -12,20 +12,20 @@ export const useAuthStore = create((set) => ({
     window.location.href = `${BACKEND_URL}/auth/github`;
   },
 
-  // Check if user is authenticated by calling backend
-  checkAuth: async () => {
-    set({ isLoading: true });
-    try {
-      const res = await api.get("/auth/me");
-      set({
-        isAuthenticated: !!res.data?.user,
-        user: res.data?.user || null,
-      });
-    } catch (e) {
-      console.error("Auth check failed:", e);
-      set({ isAuthenticated: false, user: null });
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+ checkAuth: async () => {
+  set({ isLoading: true });
+  try {
+    const res = await api.get("/auth/me", { withCredentials: true }); // ✅ Add this
+    set({
+      isAuthenticated: !!res.data?.user,
+      user: res.data?.user || null,
+    });
+  } catch (e) {
+    console.error("Auth check failed:", e);
+    set({ isAuthenticated: false, user: null });
+  } finally {
+    set({ isLoading: false });
+  }
+},
+
 }));

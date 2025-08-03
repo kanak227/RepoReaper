@@ -43,6 +43,13 @@ export const callback = async (req, res) => {
     }
 
     req.session.token = accessToken;
+    res.cookie("token", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 86400000,
+      });
+
     res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
 
     
