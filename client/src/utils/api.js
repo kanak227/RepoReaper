@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  // Use relative URL to work with both development and production environments
-  baseURL: '/', 
+  baseURL:  import.meta.env.VITE_API_URL, 
   withCredentials: true,
 });
 

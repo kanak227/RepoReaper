@@ -4,7 +4,7 @@ dotenv.config()
 
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-const redirectUri = `https://reporeaper-75wc.onrender.com/auth/github/callback`;
+const redirectUri = process.env.GITHUB_REDIRECT_URI;
 
 export const signup =  (req, res) => {
     try {
@@ -43,7 +43,8 @@ export const callback = async (req, res) => {
     }
 
     req.session.token = accessToken;
-    res.redirect('/dashboard');
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+
     
   } catch (error) {
     console.error('OAuth error:', error.response?.data || error.message);
