@@ -4,7 +4,7 @@ dotenv.config()
 
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-const redirectUri = `${process.env.API_URL}/auth/github/callback`;
+const redirectUri = `https://reporeaper-75wc.onrender.com/auth/github/callback`;
 
 export const signup =  (req, res) => {
     try {

@@ -195,7 +195,7 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="flex justify-between items-center px-3 text-sm opacity-70 mb-1">
+      <div className="flex justify-between items-center px-3 text-sm text-gray-500 mb-1">
           <p>Selected : {selected.length}</p>
           <p>
             Total: {filteredRepos.length}
