@@ -41,5 +41,5 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 For commercial use, licensing, or partnership inquiries, please contact:
 
-📧 kanakverma325@gmail.com *(replace with your actual contact email)*
+📧 kanakverma325@gmail.com 
 
