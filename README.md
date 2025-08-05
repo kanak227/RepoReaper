@@ -1,106 +1,147 @@
-# RepoReaper
+<div align="center">
 
-A tool to bulk-delete GitHub repositories in just a few clicks. Fast, safe, and super simple.
+# RepoReaper ⚔️
 
-## Features
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![Node.js](https://img.shields.io/badge/Node.js-14%2B-green.svg)](https://nodejs.org/)
+[![GitHub OAuth](https://img.shields.io/badge/Auth-GitHub%20OAuth-blue.svg)](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success)](https://reporeaper-frontend.onrender.com)
 
-- OAuth-secured GitHub authentication
-- Bulk repository deletion
-- Filter repositories by name, private status, and fork status
-- Clean and modern UI
+> Effortlessly delete multiple GitHub repositories in one go. Fast. Secure. Streamlined.
 
-## Setup
+</div>
 
-### Prerequisites
+---
 
-- Node.js (v14 or higher)
-- npm or yarn
+## 🌐 Live Site
+
+🔗 [https://reporeaper-frontend.onrender.com](https://reporeaper-frontend.onrender.com)
+
+
+<img width="1919" height="869" alt="Screenshot 2025-08-05 195410" src="https://github.com/user-attachments/assets/531e26b0-847e-4fd7-89d1-86330f29add0" />
+
+
+## 🚀 Features
+
+- 🔐 **Secure GitHub OAuth Login**  
+- 🗑️ **Bulk Delete Repositories** — Select and delete multiple repos in one click  
+- 🔍 **Smart Filters** — Filter by name, private/public, or forked status  
+- 💎 **Modern UI** — Clean, responsive frontend built for speed and usability
+
+---
+
+## ⚙️ Tech Stack
+
+- **Frontend:** React + Vite + TailwindCSS  
+- **Backend:** Node.js + Express  
+- **Auth:** GitHub OAuth  
+- **Deployment:** Render (Frontend + Backend hosted separately)
+
+---
+
+## 🧪 Local Setup
+
+### 📦 Prerequisites
+
+- Node.js v14 or higher  
+- npm or yarn  
 - GitHub OAuth App credentials
 
-### Environment Variables
+### 🔐 Environment Variables
 
-Create `.env` file in the root directory with the following variables:
+Create a `.env` file in the root directory:
 
-```
+```env
 PORT=3000
 GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_REDIRECT_URI = github_redirect_url (backend_url/auth/github/callback)
 GITHUB_CLIENT_SECRET=your_github_client_secret
 SESSION_SECRET=your_session_secret
 API_URL=http://localhost:3000
-FRONTEND_URL=http://localhost:3000
+FRONTEND_URL=http://localhost:5173
 ```
 
-### Installation
+Create a `.env` file in the client directory:
 
-1. Clone the repository
-2. Install dependencies:
-
-```bash
-npm install
-npm install --prefix client
+```env
+VITE_FRONTEND_URL=http://localhost:5173
+VITE_API_URL=https:http://localhost:3000
 ```
 
-## Running the Application
+---
 
-### Development Mode (Separate Frontend and Backend)
+## 🛠️ Installation
 
-Start the backend server:
+1. Clone the repo  
+   ```bash
+   git clone https://github.com/kanak227/RepoReaper.git
+   cd RepoReaper
+   ```
 
+2. Install frontend dependencies  
+   ```bash
+   cd client
+   npm install
+   ```
+
+2. Install backend dependencies  
+   ```bash
+   cd server
+   npm install
+   ```
+
+---
+
+## 👨‍💻 Running the App Locally
+
+### ▶️ Development Mode (Frontend + Backend separately)
+
+Start the backend:
 ```bash
+cd server
 npm run dev
 ```
 
-Start the frontend development server in a separate terminal:
-
+Start the frontend (in a new terminal):
 ```bash
-npm run dev:client
+cd client
+npm run dev
 ```
 
-Access the application at http://localhost:5173
+Visit: [http://localhost:5173](http://localhost:5173)
 
-### Production Mode (Single Server)
+---
 
-Build the frontend:
 
-```bash
-npm run build
-```
+## 🤝 Contributing
 
-Start the production server:
+RepoReaper is open to contributions! Whether you found a bug, have a feature request, or want to submit a pull request — you're welcome!
 
-```bash
-npm run prod
-```
+### How to contribute:
 
-Access the application at http://localhost:3000
+- 🐛 **Found a bug?**  
+  [Open an issue](https://github.com/yourusername/repo-reaper/issues) with a clear description and reproduction steps.
 
-## Deployment
+- 🌟 **Want to improve a feature or UI?**  
+  Fork the repo, create a new branch, and make a pull request.
 
-The application is configured to be deployed as a single server that serves both the API and the frontend. When deploying to a platform like Render, Heroku, or Vercel, make sure to:
+- 📚 **Need help setting up?**  
+  Open a discussion or issue — we’re happy to assist.
 
-1. Set the `NODE_ENV` environment variable to `production`
-2. Set all required environment variables in your deployment platform
-3. Use the build command: `npm run build`
-4. Use the start command: `npm start`
+**💡 Tip:** Be sure to follow standard coding practices and write clean, commented code. It makes reviewing much easier!
 
-## Troubleshooting
+---
 
-### Authentication Issues
+## 🧯 Troubleshooting
 
-If you're experiencing authentication issues:
+### GitHub Auth not working?
 
-1. Make sure your GitHub OAuth App has the correct callback URL: `http://localhost:3000/auth/github/callback` for local development
-2. Check that your session cookie is being set correctly (not blocked by browser settings)
-3. Verify that your environment variables are set correctly
+- Ensure GitHub OAuth callback is:  
+  `http://localhost:3000/auth/github/callback`
+- Verify that all `.env` values are correctly set
 
-### Redirect Issues
+---
+## 📄 License
 
-If redirects are not working correctly:
-
-1. Make sure you're using relative URLs in the frontend code
-2. Check that the server is properly configured to serve the React app for all frontend routes
-3. Verify that CORS is properly configured if you're running the frontend and backend on different ports
-
-## License
-
-ISC
+This project is licensed under a [Non-Commercial License](LICENSE.md).  
+For commercial inquiries, please contact 📧 kanakverma325@gmail.com.
