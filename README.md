@@ -32,7 +32,7 @@
 
 ## ⚙️ Tech Stack
 
-- **Frontend:** React + Vite + TailwindCSS  
+- **Frontend:** React + Vite + TailwindCSS + Framer
 - **Backend:** Node.js + Express  
 - **Auth:** GitHub OAuth  
 - **Deployment:** Render (Frontend + Backend hosted separately)
