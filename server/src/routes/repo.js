@@ -1,5 +1,4 @@
 import express from 'express';
-import axios from 'axios';
 import { getList , deleteRepo } from '../controllers/repo.controller.js';
 import { requireAuth } from '../middleware/checkAuth.js';
 

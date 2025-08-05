@@ -2,7 +2,7 @@ export const parentVariants = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.3, // Delay between each child
+      staggerChildren: 0.3,
     },
   },
 }

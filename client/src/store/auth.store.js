@@ -7,7 +7,6 @@ export const useAuthStore = create((set) => ({
   user: null,
   isLoading: false,
 
-  // Redirect user to GitHub auth route on backend
   loginwithGithub: () => {
     window.location.href = `${BACKEND_URL}/auth/github`;
   },
@@ -15,7 +14,7 @@ export const useAuthStore = create((set) => ({
  checkAuth: async () => {
   set({ isLoading: true });
   try {
-    const res = await api.get("/auth/me", { withCredentials: true }); // ✅ Add this
+    const res = await api.get("/auth/me", { withCredentials: true }); 
     set({
       isAuthenticated: !!res.data?.user,
       user: res.data?.user || null,

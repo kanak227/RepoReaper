@@ -203,10 +203,8 @@ const Dashboard = () => {
         </div>
 
       <div className="rounded-xl shadow-lg p-4 mb-12 border border-blue-900">
-        
         <RepoList repos={filteredRepos} selected={selected} setSelected={setSelected} />
       </div>
-
       <Footer/>
     </div>
   );
