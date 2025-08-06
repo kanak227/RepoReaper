@@ -1,5 +1,4 @@
 import React from 'react'
-import Blob from './decos/Blob'
 import Button from './decos/Button'
 import { Github } from 'lucide-react'
 import { useAuthStore } from '../store/auth.store'
