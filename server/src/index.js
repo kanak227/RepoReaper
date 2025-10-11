@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const isProd = NODE_ENV === 'production';
 const FRONTEND = (process.env.FRONTEND_URL || '').trim();
+const COOKIE_DOMAIN = (process.env.COOKIE_DOMAIN || '').trim();
 
 app.use(cors({
   origin: isProd ? [FRONTEND] : true,
@@ -23,7 +24,9 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
-app.set('trust proxy', 1);
+// Trust upstream proxies (load balancers/CDNs) so req.secure is correct behind HTTPS
+// Using `true` handles multiple proxies across hosts like Vercel/Render/Cloudflare.
+app.set('trust proxy', true);
 
 
 app.use(session({
@@ -33,6 +36,7 @@ app.use(session({
   cookie: {
   secure: isProd,
   sameSite: isProd ? 'None' : 'Lax',
+  domain: isProd && COOKIE_DOMAIN ? COOKIE_DOMAIN : undefined,
     maxAge: 1000 * 60 * 60
   },
 }));
@@ -42,6 +46,7 @@ app.use('/repos', repoRoutes);
 
 
 app.listen(PORT, () => {
-  console.log(` RepoReaper backend running at http://localhost:${PORT}`);
+  console.log(`RepoReaper backend running on port ${PORT}`);
+  console.log(`Env -> NODE_ENV=${NODE_ENV} | CORS_ORIGIN=${FRONTEND || '(none)'} | secureCookies=${isProd} | cookieDomain=${COOKIE_DOMAIN || '(host default)'}`);
 });
 
