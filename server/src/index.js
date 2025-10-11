@@ -10,9 +10,12 @@ dotenv.config()
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const isProd = NODE_ENV === 'production';
+const FRONTEND = (process.env.FRONTEND_URL || '').trim();
 
 app.use(cors({
-  origin: [process.env.FRONTEND_URL], 
+  origin: isProd ? [FRONTEND] : true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -28,8 +31,8 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true,
-    sameSite: 'None', 
+  secure: isProd,
+  sameSite: isProd ? 'None' : 'Lax',
     maxAge: 1000 * 60 * 60
   },
 }));

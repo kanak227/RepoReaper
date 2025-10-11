@@ -8,7 +8,7 @@ const redirectUri = process.env.GITHUB_REDIRECT_URI;
 
 export const signup =  (req, res) => {
     try {
-          const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=repo,delete_repo&redirect_uri=${redirectUri}`;
+          const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=repo,delete_repo&redirect_uri=${encodeURIComponent(redirectUri)}`;
           res.redirect(githubAuthUrl);
     } catch (error) {
         console.error('OAuth error:', error.response?.data || error.message);
@@ -43,14 +43,16 @@ export const callback = async (req, res) => {
     }
 
     req.session.token = accessToken;
+    const isProd = (process.env.NODE_ENV || 'development') === 'production';
     res.cookie("token", accessToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "None",
+      secure: isProd,
+      sameSite: isProd ? 'None' : 'Lax',
       maxAge: 86400000,
       });
 
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+  const fe = (process.env.FRONTEND_URL || 'http://localhost:5173').trim();
+  res.redirect(`${fe}/dashboard`);
 
     
   } catch (error) {
@@ -60,9 +62,9 @@ export const callback = async (req, res) => {
 }
 
 export const checkAuth = (req, res) => {
-  if (req.session && req.session.token) {
-    res.json({ user: true });
-  } else {
-    res.json({ user: null });
+  const token = req.session?.token || req.cookies?.token;
+  if (token && !req.session?.token) {
+    req.session.token = token;
   }
+  res.json({ user: token ? true : null });
 }
