@@ -12,6 +12,15 @@ function App() {
   const checkAuth = useAuthStore((s) => s.checkAuth);
   useEffect(() => {
     const doCheck = async () => {
+      // Check for token in URL (fallback for cross-site cookie blocking)
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+      if (token) {
+        localStorage.setItem("token", token);
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
       await checkAuth();
       setLoading(false);
     };

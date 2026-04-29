@@ -54,7 +54,8 @@ export const callback = async (req, res) => {
 
     const fe = (process.env.FRONTEND_URL || 'http://localhost:5173').trim();
     // Use an HTML redirect to improve cookie persistence reliability on some browsers (e.g., Firefox)
-    const target = `${fe}/dashboard`;
+    // Also include the token in the URL as a fallback for cross-site cookie blocking
+    const target = `${fe}/dashboard?token=${accessToken}`;
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.send(`<!DOCTYPE html>
 <html lang="en">
@@ -85,7 +86,11 @@ export const callback = async (req, res) => {
 }
 
 export const checkAuth = (req, res) => {
-  const token = req.cookies?.token;
+  const cookieToken = req.cookies?.token;
+  const authHeader = req.headers.authorization;
+  const headerToken = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+  
+  const token = cookieToken || headerToken;
   res.json({ user: token ? true : null });
 }
 

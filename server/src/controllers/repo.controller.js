@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const getList = async (req, res) => {
   try {
-    const token = req.cookies?.token;
+    const token = req.token;
 
     let allRepos = [];
     let page = 1;
@@ -54,7 +54,7 @@ export const getList = async (req, res) => {
 }
 
 export const deleteRepo =  async (req, res) => {
-  const token = req.cookies?.token;
+  const token = req.token;
   const reposToDelete = req.body.repos;
 
   if (!Array.isArray(reposToDelete) || reposToDelete.length === 0) {
@@ -89,7 +89,7 @@ export const deleteRepo =  async (req, res) => {
 }
 
 export const archiveRepo = async (req, res) => {
-  const token = req.cookies?.token;
+  const token = req.token;
   const reposToArchive = req.body.repos;
 
   if (!Array.isArray(reposToArchive) || reposToArchive.length === 0) {
@@ -128,7 +128,7 @@ export const archiveRepo = async (req, res) => {
 }
 
 export const makePrivate = async (req, res) => {
-  const token = req.cookies?.token;
+  const token = req.token;
   const reposToUpdate = req.body.repos;
 
   if (!Array.isArray(reposToUpdate) || reposToUpdate.length === 0) {
@@ -168,7 +168,7 @@ export const makePrivate = async (req, res) => {
 
 export const getStarred = async (req, res) => {
   try {
-    const token = req.cookies?.token;
+    const token = req.token;
 
     let allRepos = [];
     let page = 1;
@@ -224,7 +224,7 @@ export const getStarred = async (req, res) => {
 }
 
 export const unstarRepos = async (req, res) => {
-  const token = req.cookies?.token;
+  const token = req.token;
   const reposToUnstar = req.body.repos;
 
   if (!Array.isArray(reposToUnstar) || reposToUnstar.length === 0) {

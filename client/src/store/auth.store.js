@@ -14,6 +14,7 @@ export const useAuthStore = create((set) => ({
   logout: async () => {
     try {
       await api.post("/auth/logout");
+      localStorage.removeItem("token");
       set({ isAuthenticated: false, user: null });
     } catch (e) {
       console.error("Logout failed:", e);
