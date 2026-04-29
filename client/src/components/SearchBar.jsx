@@ -1,6 +1,7 @@
 import { SearchIcon } from 'lucide-react';
 import React from 'react';
 import styles from './SearchBar.module.css';
+import { useAppStore } from '../store/app.store';
 
 
 const SearchBar = ({
@@ -13,50 +14,54 @@ const SearchBar = ({
   priv,
   onPriv
 }) => {
+  const { mode } = useAppStore();
+  
   return (
     <div className="w-full px-2">
-      <div className="mb-3 flex flex-col gap-3 md:gap-4 lg:flex-row lg:items-center py-3 rounded-lg shadow-lg justify-between">
-        <div className="relative flex items-center w-full lg:w-auto flex-1">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 pointer-events-none">
+      <div className="mb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-4 py-3 rounded-lg shadow-lg">
+        {/* Search Input takes remaining width */}
+        <div className="relative flex items-center w-full flex-1">
+          <span className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors ${mode === 'reaper' ? 'text-blue-400' : 'text-yellow-500'}`}>
             <SearchIcon size={20} />
           </span>
           <input
             type="text"
-            className="w-full h-10 pl-10 pr-4 rounded-lg border border-blue-700 bg-zinc-900/10 text-white placeholder:text-white focus:outline-none focus:ring-1 focus:ring-blue-400 transition-all duration-200 shadow-sm transition-colors"
+            className={`w-full h-10 pl-10 pr-4 rounded-lg bg-zinc-900/10 text-white placeholder:text-white focus:outline-none transition-all duration-200 shadow-sm transition-colors border ${mode === 'reaper' ? 'border-blue-700 focus:ring-1 focus:ring-blue-400' : 'border-yellow-700 focus:ring-1 focus:ring-yellow-500'}`}
             placeholder="Search repositories..."
             value={search}
             onChange={onSearch}
           />
         </div>
 
-        <div className="flex flex-row gap-8 items-start w-full lg:w-auto">
-          <label className="flex items-center gap-2 cursor-pointer text-blue-100 hover:text-blue-400 transition-colors">
+        {/* Checkboxes on the right side */}
+        <div className="flex flex-row flex-wrap gap-6 items-center shrink-0 mt-1 lg:mt-0">
+          <label className={`flex items-center gap-2 cursor-pointer transition-colors ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
             <input
               type="checkbox"
               checked={selectAll}
               onChange={onSelectAll}
-              className={styles.customBlueCheckbox + ' w-4 h-4'}
+              className={(mode === 'reaper' ? styles.customBlueCheckbox : styles.customYellowCheckbox) + ' w-4 h-4'}
             />
             <span className="text-sm font-medium">Select All</span>
           </label>
 
 
-          <label className="flex items-center gap-2 cursor-pointer text-blue-100 hover:text-blue-400 transition-colors">
+          <label className={`flex items-center gap-2 cursor-pointer transition-colors ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
             <input
               type="checkbox"
               checked={forked}
               onChange={onForked}
-              className={styles.customBlueCheckbox + ' w-4 h-4'}
+              className={(mode === 'reaper' ? styles.customBlueCheckbox : styles.customYellowCheckbox) + ' w-4 h-4'}
             />
             <span className="text-sm font-medium">Forked</span>
           </label>
 
-          <label className="flex items-center gap-2 cursor-pointer text-blue-100 hover:text-blue-400 transition-colors">
+          <label className={`flex items-center gap-2 cursor-pointer transition-colors ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
             <input
               type="checkbox"
               checked={priv}
               onChange={onPriv}
-              className={styles.customBlueCheckbox + ' w-4 h-4'}
+              className={(mode === 'reaper' ? styles.customBlueCheckbox : styles.customYellowCheckbox) + ' w-4 h-4'}
             />
             <span className="text-sm font-medium">Private</span>
           </label>

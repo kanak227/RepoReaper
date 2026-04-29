@@ -11,6 +11,15 @@ export const useAuthStore = create((set) => ({
     window.location.href = `${BACKEND_URL}/auth/github`;
   },
 
+  logout: async () => {
+    try {
+      await api.post("/auth/logout");
+      set({ isAuthenticated: false, user: null });
+    } catch (e) {
+      console.error("Logout failed:", e);
+    }
+  },
+
  checkAuth: async () => {
   set({ isLoading: true });
   try {

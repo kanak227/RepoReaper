@@ -1,12 +1,12 @@
 import express from 'express';
-import session from 'express-session';
+import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import repoRoutes from './routes/repo.js';
 import cookieParser from 'cookie-parser';
 
-dotenv.config()
+dotenv.config({ path: '../.env' });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,25 +24,19 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
-// Trust upstream proxies (load balancers/CDNs) so req.secure is correct behind HTTPS
-// Using `true` handles multiple proxies across hosts like Vercel/Render/Cloudflare.
 app.set('trust proxy', true);
 
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'reapersecret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-  secure: isProd,
-  sameSite: isProd ? 'None' : 'Lax',
-  domain: isProd && COOKIE_DOMAIN ? COOKIE_DOMAIN : undefined,
-    maxAge: 1000 * 60 * 60
-  },
-}));
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 150, 
+  message: { error: 'Too many requests from this IP, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
-app.use('/auth', authRoutes);
-app.use('/repos', repoRoutes);
+app.use('/auth', apiLimiter, authRoutes);
+app.use('/repos', apiLimiter, repoRoutes);
 
 
 app.listen(PORT, () => {

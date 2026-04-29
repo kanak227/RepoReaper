@@ -1,6 +1,6 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
-dotenv.config()
+dotenv.config({ path: '../.env' });
 
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
@@ -41,8 +41,6 @@ export const callback = async (req, res) => {
     if (!accessToken) {
       return res.status(401).send('Failed to retrieve access token');
     }
-
-    req.session.token = accessToken;
     const isProd = (process.env.NODE_ENV || 'development') === 'production';
     const cookieDomain = (process.env.COOKIE_DOMAIN || '').trim();
     res.cookie("token", accessToken, {
@@ -87,11 +85,21 @@ export const callback = async (req, res) => {
 }
 
 export const checkAuth = (req, res) => {
-  const token = req.session?.token || req.cookies?.token;
-  if (token && !req.session?.token) {
-    req.session.token = token;
-  }
+  const token = req.cookies?.token;
   res.json({ user: token ? true : null });
+}
+
+export const logout = (req, res) => {
+  const isProd = (process.env.NODE_ENV || 'development') === 'production';
+  const cookieDomain = (process.env.COOKIE_DOMAIN || '').trim();
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'None' : 'Lax',
+    domain: isProd && cookieDomain ? cookieDomain : undefined,
+    path: '/'
+  });
+  res.json({ message: 'Logged out successfully' });
 }
 
 export const debug = (req, res) => {
@@ -105,7 +113,6 @@ export const debug = (req, res) => {
     cookieDomain: (process.env.COOKIE_DOMAIN || '').trim() || null,
     frontend: (process.env.FRONTEND_URL || '').trim() || null,
     hasCookieToken: Boolean(req.cookies?.token),
-    hasSessionToken: Boolean(req.session?.token),
     origin: req.headers.origin || null,
     referer: req.headers.referer || null,
     secureReq: req.secure === true,
