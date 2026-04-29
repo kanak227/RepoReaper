@@ -1,6 +1,4 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
-dotenv.config({ path: '../.env' });
 
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
@@ -41,13 +39,15 @@ export const callback = async (req, res) => {
     if (!accessToken) {
       return res.status(401).send('Failed to retrieve access token');
     }
-    const isProd = (process.env.NODE_ENV || 'development') === 'production';
+    const NODE_ENV = (process.env.NODE_ENV || 'development').trim();
+    const isProd = NODE_ENV === 'production';
     const cookieDomain = (process.env.COOKIE_DOMAIN || '').trim();
+
     res.cookie("token", accessToken, {
       httpOnly: true,
       secure: isProd,
       sameSite: isProd ? 'None' : 'Lax',
-      domain: isProd && cookieDomain ? cookieDomain : undefined,
+      domain: cookieDomain || undefined,
       path: '/',
       maxAge: 86400000,
     });
@@ -90,13 +90,14 @@ export const checkAuth = (req, res) => {
 }
 
 export const logout = (req, res) => {
-  const isProd = (process.env.NODE_ENV || 'development') === 'production';
+  const NODE_ENV = (process.env.NODE_ENV || 'development').trim();
+  const isProd = NODE_ENV === 'production';
   const cookieDomain = (process.env.COOKIE_DOMAIN || '').trim();
   res.clearCookie('token', {
     httpOnly: true,
     secure: isProd,
     sameSite: isProd ? 'None' : 'Lax',
-    domain: isProd && cookieDomain ? cookieDomain : undefined,
+    domain: cookieDomain || undefined,
     path: '/'
   });
   res.json({ message: 'Logged out successfully' });

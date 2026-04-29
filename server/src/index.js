@@ -5,14 +5,20 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import repoRoutes from './routes/repo.js';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-dotenv.config({ path: '../.env' });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load .env from project root
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const NODE_ENV = process.env.NODE_ENV || 'development';
+const NODE_ENV = (process.env.NODE_ENV || 'development').trim();
 const isProd = NODE_ENV === 'production';
-const FRONTEND = (process.env.FRONTEND_URL || '').trim();
+const FRONTEND = (process.env.FRONTEND_URL || '').trim().replace(/\/$/, '');
 const COOKIE_DOMAIN = (process.env.COOKIE_DOMAIN || '').trim();
 
 app.use(cors({
