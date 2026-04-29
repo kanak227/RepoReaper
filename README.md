@@ -17,9 +17,8 @@
 
 🔗 [https://reporeaper-frontend.onrender.com](https://reporeaper-frontend.onrender.com)
 
-
-<img width="1919" height="869" alt="Screenshot 2025-08-05 195410" src="https://github.com/user-attachments/assets/531e26b0-847e-4fd7-89d1-86330f29add0" />
-
+![alt text](image.png)
+![alt text](image-1.png)
 
 ## 🚀 Features
 
