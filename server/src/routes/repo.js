@@ -9,6 +9,6 @@ router.delete('/delete', requireAuth, deleteRepo);
 router.post('/archive', requireAuth, archiveRepo);
 router.post('/make-private', requireAuth, makePrivate);
 router.get('/starred', requireAuth, getStarred);
-router.delete('/unstar', requireAuth, unstarRepos);
+router.post('/unstar', requireAuth, unstarRepos);
 
 export default router;
