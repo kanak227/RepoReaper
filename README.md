@@ -1,4 +1,4 @@
-````md
+
 <div align="center">
 
 # RepoReaper & StarSweeper ⚔️✨
@@ -8,15 +8,36 @@
 [![GitHub OAuth](https://img.shields.io/badge/Auth-GitHub%20OAuth-blue.svg)](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-success)](https://reporeaper-frontend.onrender.com)
 
-> Two powerful tools, one unified platform. Effortlessly clean up your GitHub repositories and starred lists. Fast. Secure. Stateless.
+> Two powerful tools, one unified platform to manage your GitHub repositories and starred repositories efficiently.
+
+<p>
+  <a href="https://reporeaper-frontend.onrender.com"><strong>🌐 Live Demo</strong></a> •
+  <a href="https://github.com/kanak227/RepoReaper/issues"><strong>🐛 Report Bug</strong></a> •
+  <a href="https://github.com/kanak227/RepoReaper/issues"><strong>✨ Request Feature</strong></a>
+</p>
 
 </div>
 
 ---
 
-## 🌐 Live Site
+## 📖 Overview
 
-🔗 [https://reporeaper-frontend.onrender.com](https://reporeaper-frontend.onrender.com)
+RepoReaper & StarSweeper is a full-stack GitHub productivity platform that helps developers clean up and organize their GitHub accounts.
+
+- ⚔️ **RepoReaper** — Bulk delete, archive, and privatize repositories.
+- ✨ **StarSweeper** — Bulk unstar repositories to declutter your starred list.
+- 🔐 **Secure GitHub OAuth** — Authenticate safely using your GitHub account.
+- 🚫 **Stateless Architecture** — No database and no permanent storage of user data.
+
+---
+
+## 🌐 Live Demo
+
+🔗 https://reporeaper-frontend.onrender.com
+
+---
+
+## 📸 Screenshots
 
 ![RepoReaper Dashboard](image.png)
 ![StarSweeper Mode](image-1.png)
@@ -25,32 +46,35 @@
 
 ## 🚀 Features
 
-The platform operates in two dynamic modes, easily switchable via the global toggle in the navbar.
-
 ### ⚔️ RepoReaper Mode
-- 🗑️ **Bulk Delete Repositories** — Delete multiple repositories in one click.
-- 📦 **Bulk Archive** — Archive repositories to make them read-only.
-- 🔒 **Bulk Privatize** — Convert public repositories to private.
+
+- 🗑️ Bulk delete repositories
+- 📦 Bulk archive repositories
+- 🔒 Bulk convert repositories to private
 
 ### ✨ StarSweeper Mode
-- ⭐ **Bulk Unstar Repositories** — Clean up your starred repositories efficiently.
-- 🎨 **Dynamic Theming** — Unique yellow/orange theme for StarSweeper mode.
+
+- ⭐ Bulk unstar repositories
+- 🎨 Dynamic yellow/orange theme
 
 ### 🛡️ Platform Features
-- 🔐 **Secure GitHub OAuth Authentication**
-- 🔍 **Smart Search and Filtering**
-- 🚫 **Stateless Architecture** — No database and no permanent storage of user data.
-- 💎 **Modern Responsive UI**
-- ⚡ **Fast Bulk Operations**
+
+- 🔐 Secure GitHub OAuth authentication
+- 🔍 Search, sorting, and filtering
+- ⚡ Fast bulk operations
+- 💎 Modern responsive UI
+- 🚫 Stateless backend architecture
 
 ---
 
 ## ⚙️ Tech Stack
 
-- **Frontend:** React, Vite, Tailwind CSS, Zustand, Framer Motion
-- **Backend:** Node.js, Express.js
-- **Authentication:** GitHub OAuth
-- **Deployment:** Render
+| Layer | Technologies |
+|------|------|
+| Frontend | React, Vite, Tailwind CSS, Zustand, Framer Motion |
+| Backend | Node.js, Express.js |
+| Authentication | GitHub OAuth |
+| Deployment | Render |
 
 ---
 
@@ -64,7 +88,7 @@ The platform operates in two dynamic modes, easily switchable via the global tog
 
 ### 🔐 Environment Variables
 
-Create a `.env` file in the `server` directory:
+#### Server (`server/.env`)
 
 ```env
 PORT=3000
@@ -76,7 +100,7 @@ API_URL=http://localhost:3000
 FRONTEND_URL=http://localhost:5173
 ````
 
-Create a `.env` file in the `client` directory:
+#### Client (`client/.env`)
 
 ```env
 VITE_FRONTEND_URL=http://localhost:5173
@@ -87,30 +111,23 @@ VITE_API_URL=http://localhost:3000
 
 ## 🛠️ Installation
 
-1. Clone the repository
-
 ```bash
+# Clone the repository
 git clone https://github.com/kanak227/RepoReaper.git
 cd RepoReaper
-```
 
-2. Install frontend dependencies
-
-```bash
+# Install frontend dependencies
 cd client
 npm install
-```
 
-3. Install backend dependencies
-
-```bash
+# Install backend dependencies
 cd ../server
 npm install
 ```
 
 ---
 
-## 👨‍💻 Running the App Locally
+## ▶️ Running the Application
 
 ### Start the Backend
 
@@ -119,20 +136,20 @@ cd server
 npm run dev
 ```
 
-### Start the Frontend (in a new terminal)
+### Start the Frontend
 
 ```bash
 cd client
 npm run dev
 ```
 
-Visit: `http://localhost:5173`
+Open: `http://localhost:5173`
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions from developers of all experience levels.
+Contributions are welcome from developers of all experience levels.
 
 ### Ways to Contribute
 
@@ -145,24 +162,23 @@ We welcome contributions from developers of all experience levels.
 ### Getting Started
 
 1. Fork the repository
-2. Create a new branch
+2. Create a feature branch
 3. Make your changes
 4. Submit a pull request
 
-Please read the following documents before contributing:
+Please read:
 
 * 📘 [CONTRIBUTING.md](CONTRIBUTING.md)
 * 🤝 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
-### Good First Issues
+### 🌱 Good First Issues
 
-If you are new to the project, start with issues labeled:
+New contributors can start with issues labeled:
 
 * `good first issue`
 * `beginner friendly`
 * `gssoc26`
 
-View all open issues here:
 👉 [https://github.com/kanak227/RepoReaper/issues](https://github.com/kanak227/RepoReaper/issues)
 
 ---
@@ -171,9 +187,9 @@ View all open issues here:
 
 ### GitHub OAuth Not Working
 
-* Ensure the callback URL exactly matches your GitHub OAuth App settings.
-* Verify that all `.env` variables are correctly configured.
-* Restart both frontend and backend after changing environment variables.
+* Ensure the callback URL matches your GitHub OAuth App settings exactly.
+* Verify all `.env` variables are configured correctly.
+* Restart both frontend and backend after updating environment variables.
 
 ---
 
@@ -183,15 +199,12 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-## ⭐ Support the Project
+## ⭐ Support
 
-If you find this project useful, consider giving it a star on GitHub.
+If you find this project useful, please consider starring the repository.
 
 ---
 
 ## 🙌 Acknowledgements
 
-Built with ❤️ using React, Node.js, and the GitHub API.
-
-```
-```
+Built with ❤️ using React, Node.js, Express.js, and the GitHub API.
