@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Contribution Guidelines
+    url: https://github.com/kanak227/RepoReaper/blob/main/CONTRIBUTING.md
+    about: Please read the contribution guidelines before submitting an issue or pull request.
