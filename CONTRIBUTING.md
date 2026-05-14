@@ -1,4 +1,3 @@
-````md
 # Contributing to RepoReaper & StarSweeper ⚔️✨
 
 Thank you for your interest in contributing to RepoReaper & StarSweeper! We welcome contributions of all kinds, including bug fixes, new features, UI improvements, documentation updates, and test additions.
@@ -6,18 +5,18 @@ Thank you for your interest in contributing to RepoReaper & StarSweeper! We welc
 By contributing to this project, you help improve a tool that enables developers to efficiently manage their GitHub repositories and starred repositories.
 
 ---
-
 ## 📌 Table of Contents
 
-- [Code of Conduct](#-code-of-conduct)
-- [Ways to Contribute](#-ways-to-contribute)
-- [Project Setup](#-project-setup)
-- [Creating a Branch](#-creating-a-branch)
-- [Making Changes](#-making-changes)
-- [Commit Message Guidelines](#-commit-message-guidelines)
-- [Submitting a Pull Request](#-submitting-a-pull-request)
-- [Issue Labels](#-issue-labels)
-- [Need Help?](#-need-help)
+- [Code of Conduct](#code-of-conduct)
+- [Ways to Contribute](#ways-to-contribute)
+- [Project Setup](#project-setup)
+- [Creating a Branch](#creating-a-branch)
+- [Making Changes](#making-changes)
+- [Commit Message Guidelines](#commit-message-guidelines)
+- [Submitting a Pull Request](#submitting-a-pull-request)
+- [Pull Request Checklist](#pull-request-checklist)
+- [Issue Labels](#issue-labels)
+- [Tips for New Contributors](#tips-for-new-contributors)
 
 ---
 
@@ -31,19 +30,17 @@ Please read our `CODE_OF_CONDUCT.md` before contributing. By participating in th
 
 You can contribute in several ways:
 
-- 🐛 Fix bugs
-- ✨ Add new features
-- 🎨 Improve UI/UX
-- 📚 Enhance documentation
-- 🧪 Write tests
-- ⚡ Optimize performance
-- ♿ Improve accessibility
+* 🐛 Fix bugs
+* ✨ Add new features
+* 🎨 Improve UI/UX
+* 📚 Enhance documentation
+* 🧪 Write tests
 
 If you are new to open source, start with issues labeled:
 
-- `good first issue`
-- `beginner friendly`
-- `documentation`
+* `good first issue`
+* `beginner friendly`
+* `documentation`
 
 ---
 
@@ -58,7 +55,7 @@ Click the **Fork** button in the top-right corner of the repository page.
 ```bash
 git clone https://github.com/your-username/RepoReaper.git
 cd RepoReaper
-````
+```
 
 ### 3. Install Dependencies
 
@@ -222,17 +219,15 @@ Before submitting your PR, ensure that:
 
 This project uses the following labels:
 
-| Label              | Description                        |
-| ------------------ | ---------------------------------- |
-| `good first issue` | Beginner-friendly tasks            |
-| `help wanted`      | Tasks needing community support    |
-| `bug`              | Something is not working correctly |
-| `enhancement`      | New feature or improvement         |
-| `documentation`    | Documentation updates              |
-| `frontend`         | React and UI-related work          |
-| `backend`          | Node.js and API-related work       |
-| `testing`          | Unit or integration tests          |
-| `gssoc26`          | Issues available for GSSoC 2026    |
+* `good first issue`
+* `help wanted`
+* `bug`
+* `enhancement`
+* `documentation`
+* `frontend`
+* `backend`
+* `testing`
+* `gssoc26`
 
 ---
 
@@ -243,15 +238,6 @@ This project uses the following labels:
 * Keep pull requests focused on one issue.
 * Write clean, readable code.
 * Be open to feedback and suggestions.
-
----
-
-## 🚫 What to Avoid
-
-* Large pull requests covering multiple issues.
-* Unrelated refactoring.
-* Breaking existing functionality.
-* Copying code without understanding it.
 
 ---
 
@@ -272,6 +258,3 @@ We are happy to help you get started.
 Thank you for taking the time to contribute to RepoReaper & StarSweeper. Your contributions help make this project better for developers everywhere.
 
 Happy Coding! 🚀
-
-```
-```
