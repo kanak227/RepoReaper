@@ -36,9 +36,17 @@ const RepoList = ({ repos, selected, setSelected }) => {
     textarea.style.position = 'fixed';
     textarea.style.opacity = '0';
     document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
+
+    try {
+      textarea.select();
+      const didCopy = document.execCommand('copy');
+
+      if (!didCopy) {
+        throw new Error('Fallback clipboard copy failed');
+      }
+    } finally {
+      document.body.removeChild(textarea);
+    }
   };
 
   const handleCopyUrl = async (event, repo) => {
