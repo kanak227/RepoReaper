@@ -1,8 +1,13 @@
+import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { Check, Copy } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
 
 const RepoList = ({ repos, selected, setSelected }) => {
   const { mode } = useAppStore();
+  const [copiedRepo, setCopiedRepo] = useState(null);
+
   const toggleSelect = (fullName) => {
     setSelected((prev) =>
       prev.includes(fullName)
@@ -15,6 +20,40 @@ const RepoList = ({ repos, selected, setSelected }) => {
     if (!kb) return '0 KB';
     if (kb < 1024) return `${kb} KB`;
     return `${(kb / 1024).toFixed(1)} MB`;
+  };
+
+  const getRepoUrl = (repo) => repo.html_url || `https://github.com/${repo.full_name}`;
+
+  const copyToClipboard = async (text) => {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  };
+
+  const handleCopyUrl = async (event, repo) => {
+    event.stopPropagation();
+
+    try {
+      await copyToClipboard(getRepoUrl(repo));
+      setCopiedRepo(repo.full_name);
+      toast.success('Repository URL copied to clipboard.');
+      setTimeout(() => {
+        setCopiedRepo((current) => (current === repo.full_name ? null : current));
+      }, 1500);
+    } catch {
+      toast.error('Failed to copy repository URL.');
+    }
   };
 
   return (
@@ -36,8 +75,27 @@ const RepoList = ({ repos, selected, setSelected }) => {
                 <h3 className="text-white font-semibold truncate pr-2" title={repo.name}>
                   {repo.name}
                 </h3>
-                <div className={`w-5 h-5 rounded-full flex-shrink-0 border-2 flex items-center justify-center ${isSelected ? (mode === 'reaper' ? 'border-blue-400 bg-blue-500' : 'border-yellow-400 bg-yellow-500') : 'border-gray-600'}`}>
-                  {isSelected && <svg className={`w-3 h-3 ${mode === 'reaper' ? 'text-white' : 'text-black'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
+                <div className="flex flex-shrink-0 items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={(event) => handleCopyUrl(event, repo)}
+                    aria-label={`Copy ${repo.full_name} URL`}
+                    title="Copy repository URL"
+                    className={`rounded-md border p-1.5 transition-colors ${
+                      mode === 'reaper'
+                        ? 'border-blue-500/40 text-blue-200 hover:border-blue-400 hover:bg-blue-500/20'
+                        : 'border-yellow-500/40 text-yellow-200 hover:border-yellow-400 hover:bg-yellow-500/20'
+                    }`}
+                  >
+                    {copiedRepo === repo.full_name ? (
+                      <Check className="h-3.5 w-3.5" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${isSelected ? (mode === 'reaper' ? 'border-blue-400 bg-blue-500' : 'border-yellow-400 bg-yellow-500') : 'border-gray-600'}`}>
+                    {isSelected && <svg className={`w-3 h-3 ${mode === 'reaper' ? 'text-white' : 'text-black'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
+                  </div>
                 </div>
               </div>
               

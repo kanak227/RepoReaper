@@ -33,6 +33,7 @@ export const getList = async (req, res) => {
     const simplifiedRepos = allRepos.map(repo => ({
       name: repo.name,
       full_name: repo.full_name,
+      html_url: repo.html_url,
       private: repo.private,
       user: repo.owner.login,
       id: repo.id,
@@ -198,6 +199,7 @@ export const getStarred = async (req, res) => {
     const simplifiedRepos = allRepos.map(repo => ({
       name: repo.name,
       full_name: repo.full_name,
+      html_url: repo.html_url,
       private: repo.private,
       user: repo.owner.login,
       id: repo.id,
