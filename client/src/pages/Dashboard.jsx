@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import api from "../utils/api";
 import RepoList from "../components/RepoList";
+import EmptyState from "../components/EmptyState";
 import Loader from "../components/Loader";
 import DashboardNavbar from "../components/DashboardNavbar";
 import SearchBar from "../components/SearchBar";
@@ -316,16 +317,29 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="flex justify-between items-center px-3 text-sm text-gray-500 mb-1">
-          <p>Selected : {selected.length}</p>
-          <p>
-            Total: {filteredRepos.length}
-          </p>
-        </div>
-
-      <div className="mb-12">
-        <RepoList repos={filteredRepos} selected={selected} setSelected={setSelected} />
-      </div>
+      {filteredRepos.length > 0 ? (
+        <>
+          <div className="flex justify-between items-center px-3 text-sm text-gray-500 mb-1">
+            <p>Selected : {selected.length}</p>
+            <p>Total: {filteredRepos.length}</p>
+          </div>
+          <div className="mb-12">
+            <RepoList repos={filteredRepos} selected={selected} setSelected={setSelected} />
+          </div>
+        </>
+      ) : (
+        <EmptyState
+          mode={mode}
+          reposExist={repos.length > 0}
+          hasActiveFilters={!!(search || forked || priv)}
+          onResetFilters={() => {
+            setSearch("");
+            setForked(false);
+            setPriv(false);
+            setSelected([]);
+          }}
+        />
+      )}
       <Footer/>
     </div>
   );
