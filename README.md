@@ -90,6 +90,8 @@ RepoReaper & StarSweeper is a full-stack GitHub productivity platform that helps
 
 #### Server (`server/.env`)
 
+Note: The backend will also load a repo-root `.env` as a fallback, but `server/.env` is preferred.
+
 ```env
 PORT=3000
 GITHUB_CLIENT_ID=your_github_client_id

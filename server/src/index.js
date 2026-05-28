@@ -7,12 +7,22 @@ import repoRoutes from './routes/repo.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load .env from project root
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// Load env vars from `server/.env` (preferred) and repo-root `.env` (fallback).
+// This matches the README and avoids missing GitHub OAuth config.
+const envPaths = [
+  path.resolve(__dirname, '../.env'),
+  path.resolve(__dirname, '../../.env'),
+];
+for (const envPath of envPaths) {
+  if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath, override: false });
+  }
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,7 +40,10 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
-app.set('trust proxy', true);
+// `express-rate-limit` rejects a permissive `trust proxy=true` because it makes
+// IP-based limiting trivial to bypass. In local dev we don't need proxy trust;
+// in production (e.g. Render/NGINX) we typically want the first proxy hop.
+app.set('trust proxy', isProd ? 1 : false);
 
 
 const apiLimiter = rateLimit({

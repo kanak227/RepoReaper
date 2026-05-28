@@ -1,12 +1,16 @@
 import axios from 'axios';
 
-const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-const redirectUri = process.env.GITHUB_REDIRECT_URI;
-
 export const signup =  (req, res) => {
     try {
-          const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=repo,delete_repo&redirect_uri=${encodeURIComponent(redirectUri)}`;
+          const CLIENT_ID = (process.env.GITHUB_CLIENT_ID || '').trim();
+          const redirectUri = (process.env.GITHUB_REDIRECT_URI || '').trim();
+          if (!CLIENT_ID) {
+            return res.status(500).send('Missing GITHUB_CLIENT_ID. Check your server/.env (or repo-root .env) and restart the backend.');
+          }
+          const resolvedRedirectUri =
+            (redirectUri && redirectUri.trim()) ||
+            `${req.protocol}://${req.get('host')}/auth/github/callback`;
+          const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=repo,delete_repo&redirect_uri=${encodeURIComponent(resolvedRedirectUri)}`;
           res.redirect(githubAuthUrl);
     } catch (error) {
         console.error('OAuth error:', error.response?.data || error.message);
@@ -21,6 +25,11 @@ export const callback = async (req, res) => {
   }
 
   try {
+    const CLIENT_ID = (process.env.GITHUB_CLIENT_ID || '').trim();
+    const CLIENT_SECRET = (process.env.GITHUB_CLIENT_SECRET || '').trim();
+    if (!CLIENT_ID || !CLIENT_SECRET) {
+      return res.status(500).send('Missing GitHub OAuth env vars (GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET). Check your server/.env and restart the backend.');
+    }
     const tokenResponse = await axios.post(
       'https://github.com/login/oauth/access_token',
       {
