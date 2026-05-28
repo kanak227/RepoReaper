@@ -1,3 +1,4 @@
+import RepoSkeleton from "../components/RepoSkeleton";
 import { useEffect, useState, useRef } from "react";
 import api from "../utils/api";
 import RepoList from "../components/RepoList";
@@ -8,7 +9,7 @@ import Footer from "../components/Footer";
 import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
-import RepoSkeleton from "../components/RepoSkeleton";
+
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
@@ -34,6 +35,7 @@ const Dashboard = () => {
       try {
         const endpoint = mode === 'reaper' ? "/repos/list" : "/repos/starred";
         const res = await api.get(endpoint);
+        await new Promise(resolve => setTimeout(resolve, 5000));
         setRepos(res.data.repos);
         setUser(res.data.user);
         setImg(res.data.avatar);
@@ -166,12 +168,28 @@ const Dashboard = () => {
 
   if (loading) {
   return (
-    <div className="min-h-screen p-6 lg:px-20 md:px-10">
-      <RepoSkeleton />
+    <div className="min-h-screen p-6 lg:px-20 md:px-10 bg-black">
+      <div className="mb-8 space-y-5">
+        <div className="flex items-center justify-between gap-4">
+          <div className="h-14 w-44 rounded-xl bg-white/5 border border-white/10 animate-pulse"></div>
+          <div className="hidden md:flex items-center gap-3">
+            <div className="h-10 w-32 rounded-lg bg-white/5 border border-white/10 animate-pulse"></div>
+            <div className="h-10 w-28 rounded-lg bg-white/5 border border-white/10 animate-pulse"></div>
+            <div className="h-10 w-28 rounded-lg bg-white/5 border border-white/10 animate-pulse"></div>
+            <div className="h-10 w-28 rounded-lg bg-white/5 border border-white/10 animate-pulse"></div>
+          </div>
+        </div>
+
+        <div className="space-y-3 max-w-3xl">
+          <div className="h-12 w-3/4 rounded-2xl bg-white/5 border border-white/10 animate-pulse"></div>
+          <div className="h-5 w-2/3 rounded-xl bg-white/5 border border-white/10 animate-pulse"></div>
+        </div>
+      </div>
+
+      <RepoSkeleton mode={mode} />
     </div>
   );
-}
-
+  }
   return (
     <div className="min-h-screen p-6 lg:px-20 md:px-10">
       <Toaster position="top-right" />
