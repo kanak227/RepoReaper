@@ -186,6 +186,7 @@ GITHUB_REDIRECT_URI=http://localhost:3000/auth/github/callback
 SESSION_SECRET=your_session_secret
 API_URL=http://localhost:3000
 FRONTEND_URL=http://localhost:5173
+NODE_ENV=development
 ```
 
 #### Client (`client/.env`)
