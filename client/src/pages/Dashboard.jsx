@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
+import RepoSkeleton from "../components/RepoSkeleton";
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
@@ -163,7 +164,13 @@ const Dashboard = () => {
 
 
 
-  if (loading) return <Loader/>
+  if (loading) {
+  return (
+    <div className="min-h-screen p-6 lg:px-20 md:px-10">
+      <RepoSkeleton />
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen p-6 lg:px-20 md:px-10">
