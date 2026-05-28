@@ -33,7 +33,13 @@ const RepoCardSkeleton = ({ mode = 'reaper' }) => {
 
 const RepoSkeleton = ({ count = 6, className = '', mode = 'reaper' }) => {
   return (
-    <div className={`w-full ${className}`.trim()} aria-busy="true" aria-live="polite">
+    <div
+  className={`w-full ${className}`.trim()}
+  role="status"
+  aria-live="polite"
+  aria-busy={true}
+>
+  <span className="sr-only">Loading repositories...</span>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: count }).map((_, index) => (
           <RepoCardSkeleton key={index} mode={mode} />
