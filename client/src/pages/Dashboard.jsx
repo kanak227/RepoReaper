@@ -162,7 +162,13 @@ const Dashboard = () => {
   }, [filteredRepos, selected]);
 
 
+  const repoCount = selected.length;
 
+  const repoText =
+  repoCount === 1
+    ? "repository"
+    : "repositories";
+    
   if (loading) return <Loader/>
 
   return (
@@ -257,9 +263,11 @@ const Dashboard = () => {
       <h2 className="text-xl font-bold text-red-600 flex items-center gap-3">
         <AlertTriangle/>Confirm {actionType === 'delete' ? "Deletion" : actionType === 'archive' ? "Archive" : actionType === 'unstar' ? "Unstar" : "Visibility Change"}
       </h2>
+
       <p className="text-base text-red-500">
-        You are about to {actionType === 'delete' ? "delete" : actionType === 'archive' ? "archive" : actionType === 'unstar' ? "unstar" : "make private"} these repositories:
+         Are you sure you want to{" "} {actionType === 'delete' ? "delete" : actionType === 'archive' ? "archive": actionType === 'unstar'? "unstar" : "make private"}{" "} {repoCount} {repoText}?
       </p>
+
       <ul className="list-disc pl-6 text-sm text-white/70">
         {selected.map((repo) => (
           <li key={repo}>{repo}</li>
