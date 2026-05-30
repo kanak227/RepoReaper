@@ -75,15 +75,15 @@ const RepoList = ({ repos, selected, setSelected }) => {
               }`}
             >
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-white font-semibold truncate pr-2" title={repo.name}>
-                  {repo.name}
-                </h3>
+                <div className="flex items-start gap-1.5 min-w-0 pr-2">
+                  <h3 className="text-white font-semibold truncate" title={repo.name}>
+                    {repo.name}
+                  </h3>
 
-                <div className="flex items-center gap-2 flex-shrink-0">
                   {/* Copy URL Button */}
                   <button
                     onClick={(e) => handleCopy(e, repo)}
-                    className={`transition-colors ${
+                    className={`flex-shrink-0 rounded p-1 -m-1 transition-colors hover:bg-white/5 ${
                       isCopied
                         ? (mode === 'reaper' ? 'text-blue-400' : 'text-yellow-400')
                         : 'text-gray-500 hover:text-gray-300'
@@ -96,7 +96,9 @@ const RepoList = ({ repos, selected, setSelected }) => {
                       : <Copy className="w-4 h-4" />
                     }
                   </button>
+                </div>
 
+                <div className="flex items-center gap-2 flex-shrink-0">
                   {/* Selection Checkbox */}
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                     isSelected
