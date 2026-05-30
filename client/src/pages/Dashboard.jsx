@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
+import { getFriendlyErrorMessage } from "../utils/errors";
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
@@ -41,6 +42,7 @@ const Dashboard = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching repos:", err);
+        toast.error(getFriendlyErrorMessage(err));
         setLoading(false);
       }
     };
@@ -97,7 +99,7 @@ const Dashboard = () => {
         const failedRepos = res.data?.results?.filter(r => r.status === 'failed') || [];
 
         if (failedRepos.length > 0) {
-          toast.error(`Failed to complete action for some repositories. Check console.`, { id: loadingToast });
+          toast.error("Some repositories could not be updated. Please try again or check your permissions.", { id: loadingToast });
           console.error(`Failed:`, failedRepos);
         } else {
           toast.success(`Successfully completed action!`, { id: loadingToast });
@@ -115,7 +117,7 @@ const Dashboard = () => {
         setActionType('');
       } catch (err) {
         console.error(`${actionName} failed`, err);
-        toast.error(err.response?.data?.error || "Action failed due to an error.", { id: loadingToast });
+        toast.error(getFriendlyErrorMessage(err), { id: loadingToast });
         setShowModal(false);
         setUserConfirmation('');
         setActionType('');
@@ -160,11 +162,16 @@ const Dashboard = () => {
     const allFilteredSelected = filteredRepos.length > 0 && filteredRepos.every(r => selected.includes(r.full_name));
     setSelectAll(allFilteredSelected);
   }, [filteredRepos, selected]);
-
-
-
-  if (loading) return <Loader/>
-
+  
+  
+  if (loading) {
+  return (
+    <>
+      <Toaster position="top-right" />
+      <Loader />
+    </>
+  );
+}
   return (
     <div className="min-h-screen p-6 lg:px-20 md:px-10">
       <Toaster position="top-right" />
