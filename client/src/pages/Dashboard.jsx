@@ -162,16 +162,12 @@ const Dashboard = () => {
     const allFilteredSelected = filteredRepos.length > 0 && filteredRepos.every(r => selected.includes(r.full_name));
     setSelectAll(allFilteredSelected);
   }, [filteredRepos, selected]);
-  
-  
-  if (loading) {
-  return (
-    <>
-      <Toaster position="top-right" />
-      <Loader />
-    </>
-  );
-}
+  const repoCount = selected.length;
+  const repoText = repoCount === 1 ? "repository" : "repositories";
+
+
+  if (loading) return <Loader/>
+
   return (
     <div className="min-h-screen p-6 lg:px-20 md:px-10">
       <Toaster position="top-right" />
@@ -264,9 +260,11 @@ const Dashboard = () => {
       <h2 className="text-xl font-bold text-red-600 flex items-center gap-3">
         <AlertTriangle/>Confirm {actionType === 'delete' ? "Deletion" : actionType === 'archive' ? "Archive" : actionType === 'unstar' ? "Unstar" : "Visibility Change"}
       </h2>
+
       <p className="text-base text-red-500">
-        You are about to {actionType === 'delete' ? "delete" : actionType === 'archive' ? "archive" : actionType === 'unstar' ? "unstar" : "make private"} these repositories:
+         Are you sure you want to{" "} {actionType === 'delete' ? "delete" : actionType === 'archive' ? "archive": actionType === 'unstar'? "unstar" : "make private"}{" "} {repoCount} {repoText}?
       </p>
+
       <ul className="list-disc pl-6 text-sm text-white/70">
         {selected.map((repo) => (
           <li key={repo}>{repo}</li>
