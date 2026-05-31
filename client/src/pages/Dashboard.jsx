@@ -5,7 +5,7 @@ import Loader from "../components/Loader";
 import DashboardNavbar from "../components/DashboardNavbar";
 import SearchBar from "../components/SearchBar";
 import Footer from "../components/Footer";
-import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff } from "lucide-react";
+import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff, Download } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
 
@@ -161,7 +161,20 @@ const Dashboard = () => {
     setSelectAll(allFilteredSelected);
   }, [filteredRepos, selected]);
 
-
+const exportToCSV = () => {
+  const selectedRepos = repos.filter(r => selected.includes(r.full_name));
+  const headers = ['Name', 'Full Name', 'Private', 'Fork', 'Size', 'Updated At'];
+  const rows = selectedRepos.map(r => [r.name, r.full_name, r.private, r.fork, r.size, r.updated_at]);
+  const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'selected-repos.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+  
   const repoCount = selected.length;
 
   const repoText =
@@ -284,6 +297,12 @@ const Dashboard = () => {
         placeholder="Type confirmation here"
       />
       <div className="flex justify-end gap-2">
+      <button
+          className="px-4 py-2 border border-green-500 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
+          onClick={exportToCSV}
+        >
+          <Download className="w-4 h-4"/> Export CSV
+        </button>
         <button
           className="px-4 py-2 border border-white rounded-md hover:bg-gray-400 hover:text-black transition-colors"
           onClick={() => {
