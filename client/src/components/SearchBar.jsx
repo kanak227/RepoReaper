@@ -12,7 +12,8 @@ const SearchBar = ({
   forked,
   onForked,
   priv,
-  onPriv
+  onPriv,
+  disabled = false
 }) => {
   const { mode } = useAppStore();
   
@@ -26,41 +27,45 @@ const SearchBar = ({
           </span>
           <input
             type="text"
-            className={`w-full h-10 pl-10 pr-4 rounded-lg bg-zinc-900/10 text-white placeholder:text-white focus:outline-none transition-all duration-200 shadow-sm transition-colors border ${mode === 'reaper' ? 'border-blue-700 focus:ring-1 focus:ring-blue-400' : 'border-yellow-700 focus:ring-1 focus:ring-yellow-500'}`}
+            className={`w-full h-10 pl-10 pr-4 rounded-lg bg-zinc-900/10 text-white placeholder:text-white focus:outline-none transition-all duration-200 shadow-sm transition-colors border ${mode === 'reaper' ? 'border-blue-700 focus:ring-1 focus:ring-blue-400' : 'border-yellow-700 focus:ring-1 focus:ring-yellow-500'} ${disabled ? 'opacity-40 cursor-not-allowed' : ''}`}
             placeholder="Search repositories..."
             value={search}
             onChange={onSearch}
+            readOnly={disabled}
           />
         </div>
 
         {/* Checkboxes on the right side */}
         <div className="flex flex-row flex-wrap gap-6 items-center shrink-0 mt-1 lg:mt-0">
-          <label className={`flex items-center gap-2 cursor-pointer transition-colors ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
+          <label className={`flex items-center gap-2 transition-colors ${disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'} ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
             <input
               type="checkbox"
               checked={selectAll}
               onChange={onSelectAll}
+              disabled={disabled}
               className={(mode === 'reaper' ? styles.customBlueCheckbox : styles.customYellowCheckbox) + ' w-4 h-4'}
             />
             <span className="text-sm font-medium">Select All</span>
           </label>
 
 
-          <label className={`flex items-center gap-2 cursor-pointer transition-colors ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
+          <label className={`flex items-center gap-2 transition-colors ${disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'} ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
             <input
               type="checkbox"
               checked={forked}
               onChange={onForked}
+              disabled={disabled}
               className={(mode === 'reaper' ? styles.customBlueCheckbox : styles.customYellowCheckbox) + ' w-4 h-4'}
             />
             <span className="text-sm font-medium">Forked</span>
           </label>
 
-          <label className={`flex items-center gap-2 cursor-pointer transition-colors ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
+          <label className={`flex items-center gap-2 transition-colors ${disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'} ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
             <input
               type="checkbox"
               checked={priv}
               onChange={onPriv}
+              disabled={disabled}
               className={(mode === 'reaper' ? styles.customBlueCheckbox : styles.customYellowCheckbox) + ' w-4 h-4'}
             />
             <span className="text-sm font-medium">Private</span>

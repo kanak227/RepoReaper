@@ -164,6 +164,12 @@ const Dashboard = () => {
 
 
 
+  const noRepos = repos.length === 0;
+
+  useEffect(() => {
+    if (noRepos) setIsSortOpen(false);
+  }, [noRepos]);
+
   if (loading) return <Loader/>
 
   return (
@@ -184,8 +190,8 @@ const Dashboard = () => {
         <div className="flex gap-3 mt-10 flex-wrap justify-end">
           <div className="relative hidden md:block" ref={sortRef}>
             <button
-              onClick={() => setIsSortOpen(!isSortOpen)}
-              className="px-4 py-2 bg-gray-900/80 backdrop-blur-md text-white rounded-lg border border-gray-700 hover:border-blue-500/50 outline-none text-sm cursor-pointer flex items-center justify-between gap-2 shadow-sm transition-all"
+              onClick={() => !noRepos && setIsSortOpen(!isSortOpen)}
+              className={`px-4 py-2 bg-gray-900/80 backdrop-blur-md text-white rounded-lg border border-gray-700 outline-none text-sm flex items-center justify-between gap-2 shadow-sm transition-all ${noRepos ? 'opacity-40 cursor-not-allowed' : 'hover:border-blue-500/50 cursor-pointer'}`}
             >
               <span>{sortBy === 'updated' ? 'Latest Updated' : sortBy === 'size' ? 'Largest Size' : 'Name (A-Z)'}</span>
               <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isSortOpen ? 'rotate-180' : ''}`} />
@@ -307,13 +313,17 @@ const Dashboard = () => {
       <div className="mb-6">
         <SearchBar
           search={search}
-          onSearch={e => setSearch(e.target.value)}
+          onSearch={(e) => {
+            setSearch(e.target.value);
+            setSelectAll(false);
+          }}
           selectAll={selectAll}
           onSelectAll={handleSelectAll}
           forked={forked}
-          onForked={() => setForked(f => !f)}
+          onForked={() => { setForked(f => !f); setSelectAll(false); }}
           priv={priv}
-          onPriv={() => setPriv(p => !p)}
+          onPriv={() => { setPriv(p => !p); setSelectAll(false); }}
+          disabled={noRepos}
         />
       </div>
 
