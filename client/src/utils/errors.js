@@ -45,3 +45,11 @@ export const getFriendlyErrorMessage = (err) => {
 
   return rawMessage || "Something went wrong. Please try again.";
 };
+
+export const getRepoActionMessage = (failedRepos) => {
+  if (failedRepos?.length > 0) {
+    return "Some repositories could not be updated. Please try again or check your permissions.";
+  }
+
+  return null;
+};

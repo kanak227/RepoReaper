@@ -8,7 +8,10 @@ import Footer from "../components/Footer";
 import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
-import { getFriendlyErrorMessage } from "../utils/errors";
+import {
+  getFriendlyErrorMessage,
+  getRepoActionMessage,
+} from "../utils/errors";
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
@@ -99,7 +102,7 @@ const Dashboard = () => {
         const failedRepos = res.data?.results?.filter(r => r.status === 'failed') || [];
 
         if (failedRepos.length > 0) {
-          toast.error("Some repositories could not be updated. Please try again or check your permissions.", { id: loadingToast });
+          toast.error(getRepoActionMessage(failedRepos), { id: loadingToast });
           console.error(`Failed:`, failedRepos);
         } else {
           toast.success(`Successfully completed action!`, { id: loadingToast });

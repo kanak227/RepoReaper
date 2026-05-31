@@ -17,7 +17,7 @@ export const useAuthStore = create((set) => ({
       localStorage.removeItem("token");
       set({ isAuthenticated: false, user: null });
     } catch (e) {
-      console.error("Unable to log out. Please try again.", e);
+      console.error("Logout failed:", e);
     }
   },
 
@@ -30,7 +30,7 @@ export const useAuthStore = create((set) => ({
       user: res.data?.user || null,
     });
   } catch (e) {
-    console.error("Your session could not be verified. Please log in again if needed.", e);
+    console.error("Auth check failed:", e);
     set({ isAuthenticated: false, user: null });
   } finally {
     set({ isLoading: false });
