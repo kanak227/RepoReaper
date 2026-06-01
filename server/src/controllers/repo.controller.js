@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { bulkRepoAction } from '../services/bulkRepoAction.service.js';
+import logger from '../utils/logger.js';
 
 export const getList = async (req, res) => {
   try {
@@ -67,14 +68,14 @@ export const deleteRepo =  async (req, res) => {
     token,
     successStatus: 'deleted',
     action: (fullName, token) => {
-      console.log(`Attempting to delete: ${fullName}`);
+      logger.debug(`Attempting to delete: ${fullName}`);
       return axios.delete(`https://api.github.com/repos/${fullName}`, {
         headers: {
           Authorization: `token ${token}`,
           Accept: 'application/vnd.github+json',
         },
       }).then(response => {
-        console.log(`Deleted: ${fullName}`);
+        logger.debug(`Deleted: ${fullName}`);
         return response;
       }).catch(error => {
         console.error(`Failed to delete ${fullName}:`, error.response?.data || error.message);
@@ -99,7 +100,7 @@ export const archiveRepo = async (req, res) => {
     token,
     successStatus: 'archived',
     action: (fullName, token) => {
-      console.log(`Attempting to archive: ${fullName}`);
+      logger.debug(`Attempting to archive: ${fullName}`);
       return axios.patch(
         `https://api.github.com/repos/${fullName}`,
         { archived: true },
@@ -110,7 +111,7 @@ export const archiveRepo = async (req, res) => {
           },
         }
       ).then(response => {
-        console.log(`Archived: ${fullName}`);
+        logger.debug(`Archived: ${fullName}`);
         return response;
       }).catch(error => {
         console.error(`Failed to archive ${fullName}:`, error.response?.data || error.message);
@@ -135,7 +136,7 @@ export const makePrivate = async (req, res) => {
     token,
     successStatus: 'private',
     action: (fullName, token) => {
-      console.log(`Attempting to make private: ${fullName}`);
+      logger.debug(`Attempting to make private: ${fullName}`);
       return axios.patch(
         `https://api.github.com/repos/${fullName}`,
         { private: true },
@@ -146,7 +147,7 @@ export const makePrivate = async (req, res) => {
           },
         }
       ).then(response => {
-        console.log(`Made private: ${fullName}`);
+        logger.debug(`Made private: ${fullName}`);
         return response;
       }).catch(error => {
         console.error(`Failed to make private ${fullName}:`, error.response?.data || error.message);
@@ -228,14 +229,14 @@ export const unstarRepos = async (req, res) => {
     token,
     successStatus: 'unstarred',
     action: (fullName, token) => {
-      console.log(`Attempting to unstar: ${fullName}`);
+      logger.debug(`Attempting to unstar: ${fullName}`);
       return axios.delete(`https://api.github.com/user/starred/${fullName}`, {
         headers: {
           Authorization: `token ${token}`,
           Accept: 'application/vnd.github+json',
         },
       }).then(response => {
-        console.log(`Unstarred: ${fullName}`);
+        logger.debug(`Unstarred: ${fullName}`);
         return response;
       }).catch(error => {
         console.error(`Failed to unstar ${fullName}:`, error.response?.data || error.message);
