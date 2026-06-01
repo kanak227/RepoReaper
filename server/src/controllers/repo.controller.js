@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { bulkRepoAction } from '../services/bulkRepoAction.service.js';
 
 export const getList = async (req, res) => {
   try {
@@ -61,29 +62,26 @@ export const deleteRepo =  async (req, res) => {
     return res.status(400).json({ error: 'No repositories specified' });
   }
 
-  const results = [];
-
-  for (const fullName of reposToDelete) {
-    console.log(`Attempting to delete: ${fullName}`);
-    try {
-      const response = await axios.delete(`https://api.github.com/repos/${fullName}`, {
+  const results = await bulkRepoAction({
+    repos: reposToDelete,
+    token,
+    successStatus: 'deleted',
+    action: (fullName, token) => {
+      console.log(`Attempting to delete: ${fullName}`);
+      return axios.delete(`https://api.github.com/repos/${fullName}`, {
         headers: {
           Authorization: `token ${token}`,
           Accept: 'application/vnd.github+json',
         },
+      }).then(response => {
+        console.log(`Deleted: ${fullName}`);
+        return response;
+      }).catch(error => {
+        console.error(`Failed to delete ${fullName}:`, error.response?.data || error.message);
+        throw error;
       });
-
-      console.log(`Deleted: ${fullName}`);
-      results.push({ repo: fullName, status: 'deleted' });
-    } catch (error) {
-      console.error(`Failed to delete ${fullName}:`, error.response?.data || error.message);
-      results.push({
-        repo: fullName,
-        status: 'failed',
-        message: error.response?.data?.message || error.message,
-      });
-    }
-  }
+    },
+  });
 
   res.json({ results });
 }
@@ -96,12 +94,13 @@ export const archiveRepo = async (req, res) => {
     return res.status(400).json({ error: 'No repositories specified' });
   }
 
-  const results = [];
-
-  for (const fullName of reposToArchive) {
-    console.log(`Attempting to archive: ${fullName}`);
-    try {
-      await axios.patch(
+  const results = await bulkRepoAction({
+    repos: reposToArchive,
+    token,
+    successStatus: 'archived',
+    action: (fullName, token) => {
+      console.log(`Attempting to archive: ${fullName}`);
+      return axios.patch(
         `https://api.github.com/repos/${fullName}`,
         { archived: true },
         {
@@ -110,19 +109,15 @@ export const archiveRepo = async (req, res) => {
             Accept: 'application/vnd.github+json',
           },
         }
-      );
-
-      console.log(`Archived: ${fullName}`);
-      results.push({ repo: fullName, status: 'archived' });
-    } catch (error) {
-      console.error(`Failed to archive ${fullName}:`, error.response?.data || error.message);
-      results.push({
-        repo: fullName,
-        status: 'failed',
-        message: error.response?.data?.message || error.message,
+      ).then(response => {
+        console.log(`Archived: ${fullName}`);
+        return response;
+      }).catch(error => {
+        console.error(`Failed to archive ${fullName}:`, error.response?.data || error.message);
+        throw error;
       });
-    }
-  }
+    },
+  });
 
   res.json({ results });
 }
@@ -135,12 +130,13 @@ export const makePrivate = async (req, res) => {
     return res.status(400).json({ error: 'No repositories specified' });
   }
 
-  const results = [];
-
-  for (const fullName of reposToUpdate) {
-    console.log(`Attempting to make private: ${fullName}`);
-    try {
-      await axios.patch(
+  const results = await bulkRepoAction({
+    repos: reposToUpdate,
+    token,
+    successStatus: 'private',
+    action: (fullName, token) => {
+      console.log(`Attempting to make private: ${fullName}`);
+      return axios.patch(
         `https://api.github.com/repos/${fullName}`,
         { private: true },
         {
@@ -149,19 +145,15 @@ export const makePrivate = async (req, res) => {
             Accept: 'application/vnd.github+json',
           },
         }
-      );
-
-      console.log(`Made private: ${fullName}`);
-      results.push({ repo: fullName, status: 'private' });
-    } catch (error) {
-      console.error(`Failed to make private ${fullName}:`, error.response?.data || error.message);
-      results.push({
-        repo: fullName,
-        status: 'failed',
-        message: error.response?.data?.message || error.message,
+      ).then(response => {
+        console.log(`Made private: ${fullName}`);
+        return response;
+      }).catch(error => {
+        console.error(`Failed to make private ${fullName}:`, error.response?.data || error.message);
+        throw error;
       });
-    }
-  }
+    },
+  });
 
   res.json({ results });
 }
@@ -231,29 +223,26 @@ export const unstarRepos = async (req, res) => {
     return res.status(400).json({ error: 'No repositories specified' });
   }
 
-  const results = [];
-
-  for (const fullName of reposToUnstar) {
-    console.log(`Attempting to unstar: ${fullName}`);
-    try {
-      await axios.delete(`https://api.github.com/user/starred/${fullName}`, {
+  const results = await bulkRepoAction({
+    repos: reposToUnstar,
+    token,
+    successStatus: 'unstarred',
+    action: (fullName, token) => {
+      console.log(`Attempting to unstar: ${fullName}`);
+      return axios.delete(`https://api.github.com/user/starred/${fullName}`, {
         headers: {
           Authorization: `token ${token}`,
           Accept: 'application/vnd.github+json',
         },
+      }).then(response => {
+        console.log(`Unstarred: ${fullName}`);
+        return response;
+      }).catch(error => {
+        console.error(`Failed to unstar ${fullName}:`, error.response?.data || error.message);
+        throw error;
       });
-
-      console.log(`Unstarred: ${fullName}`);
-      results.push({ repo: fullName, status: 'unstarred' });
-    } catch (error) {
-      console.error(`Failed to unstar ${fullName}:`, error.response?.data || error.message);
-      results.push({
-        repo: fullName,
-        status: 'failed',
-        message: error.response?.data?.message || error.message,
-      });
-    }
-  }
+    },
+  });
 
   res.json({ results });
 }

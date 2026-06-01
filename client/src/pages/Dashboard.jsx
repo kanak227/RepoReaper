@@ -9,6 +9,10 @@ import Footer from "../components/Footer";
 import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
+import {
+  getFriendlyErrorMessage,
+  getRepoActionMessage,
+} from "../utils/errors";
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
@@ -42,6 +46,7 @@ const Dashboard = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching repos:", err);
+        toast.error(getFriendlyErrorMessage(err));
         setLoading(false);
       }
     };
@@ -98,7 +103,7 @@ const Dashboard = () => {
         const failedRepos = res.data?.results?.filter(r => r.status === 'failed') || [];
 
         if (failedRepos.length > 0) {
-          toast.error(`Failed to complete action for some repositories. Check console.`, { id: loadingToast });
+          toast.error(getRepoActionMessage(failedRepos), { id: loadingToast });
           console.error(`Failed:`, failedRepos);
         } else {
           toast.success(`Successfully completed action!`, { id: loadingToast });
@@ -116,7 +121,7 @@ const Dashboard = () => {
         setActionType('');
       } catch (err) {
         console.error(`${actionName} failed`, err);
-        toast.error(err.response?.data?.error || "Action failed due to an error.", { id: loadingToast });
+        toast.error(getFriendlyErrorMessage(err), { id: loadingToast });
         setShowModal(false);
         setUserConfirmation('');
         setActionType('');
@@ -161,7 +166,8 @@ const Dashboard = () => {
     const allFilteredSelected = filteredRepos.length > 0 && filteredRepos.every(r => selected.includes(r.full_name));
     setSelectAll(allFilteredSelected);
   }, [filteredRepos, selected]);
-
+  const repoCount = selected.length;
+  const repoText = repoCount === 1 ? "repository" : "repositories";
 
 
   const noRepos = repos.length === 0;
@@ -264,9 +270,11 @@ const Dashboard = () => {
       <h2 className="text-xl font-bold text-red-600 flex items-center gap-3">
         <AlertTriangle/>Confirm {actionType === 'delete' ? "Deletion" : actionType === 'archive' ? "Archive" : actionType === 'unstar' ? "Unstar" : "Visibility Change"}
       </h2>
+
       <p className="text-base text-red-500">
-        You are about to {actionType === 'delete' ? "delete" : actionType === 'archive' ? "archive" : actionType === 'unstar' ? "unstar" : "make private"} these repositories:
+         Are you sure you want to{" "} {actionType === 'delete' ? "delete" : actionType === 'archive' ? "archive": actionType === 'unstar'? "unstar" : "make private"}{" "} {repoCount} {repoText}?
       </p>
+
       <ul className="list-disc pl-6 text-sm text-white/70">
         {selected.map((repo) => (
           <li key={repo}>{repo}</li>
