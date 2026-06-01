@@ -1,6 +1,7 @@
 import fs from 'fs';
 import readline from 'readline';
 import { exec } from 'child_process';
+import { logger } from './server/src/utils/logger.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -12,10 +13,10 @@ const envExampleFile = '.env.example';
 
 // Check if .env already exists
 if (fs.existsSync(envFile)) {
-  console.log('\x1b[33m%s\x1b[0m', '.env file already exists. Do you want to overwrite it? (y/n)');
+  logger.info('\x1b[33m%s\x1b[0m', '.env file already exists. Do you want to overwrite it? (y/n)');
   rl.question('', (answer) => {
     if (answer.toLowerCase() !== 'y') {
-      console.log('Setup cancelled.');
+      logger.info('Setup cancelled.');
       rl.close();
       return;
     }
@@ -79,7 +80,7 @@ function askForVariables(envVars, comments, index, keys, answers) {
 
   // Display the comment if it exists
   if (comment) {
-    console.log(comment);
+    logger.info(comment);
   }
 
   rl.question(`${key} (default: ${defaultValue}): `, (answer) => {
@@ -106,15 +107,15 @@ function writeEnvFile(answers, comments) {
       return;
     }
 
-    console.log('\x1b[32m%s\x1b[0m', `.env file created successfully!`);
-    console.log('\x1b[36m%s\x1b[0m', 'Do you want to create a GitHub OAuth App now? (y/n)');
+    logger.info('\x1b[32m%s\x1b[0m', `.env file created successfully!`);
+    logger.info('\x1b[36m%s\x1b[0m', 'Do you want to create a GitHub OAuth App now? (y/n)');
     
     rl.question('', (answer) => {
       if (answer.toLowerCase() === 'y') {
-        console.log('\x1b[36m%s\x1b[0m', 'Opening GitHub OAuth App creation page...');
+        logger.info('\x1b[36m%s\x1b[0m', 'Opening GitHub OAuth App creation page...');
         openGitHubOAuthPage();
       } else {
-        console.log('\x1b[36m%s\x1b[0m', 'Remember to create a GitHub OAuth App and update your .env file with the credentials.');
+        logger.info('\x1b[36m%s\x1b[0m', 'Remember to create a GitHub OAuth App and update your .env file with the credentials.');
       }
       rl.close();
     });
@@ -140,7 +141,7 @@ function openGitHubOAuthPage() {
   exec(command, (error) => {
     if (error) {
       console.error('\x1b[31m%s\x1b[0m', `Failed to open browser: ${error.message}`);
-      console.log('\x1b[36m%s\x1b[0m', `Please visit ${url} manually to create your GitHub OAuth App.`);
+      logger.info('\x1b[36m%s\x1b[0m', `Please visit ${url} manually to create your GitHub OAuth App.`);
     }
   });
 }

@@ -31,7 +31,7 @@ const SearchBar = ({
             placeholder="Search repositories..."
             value={search}
             onChange={onSearch}
-            readOnly={disabled}
+            disabled={disabled}
           />
         </div>
 
