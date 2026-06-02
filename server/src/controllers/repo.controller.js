@@ -78,7 +78,7 @@ export const deleteRepo =  async (req, res) => {
         logger.debug(`Deleted: ${fullName}`);
         return response;
       }).catch(error => {
-        console.error(`Failed to delete ${fullName}:`, error.response?.data || error.message);
+        logger.error(`Failed to delete ${fullName}:`, error.response?.data || error.message);
         throw error;
       });
     },
@@ -114,7 +114,7 @@ export const archiveRepo = async (req, res) => {
         logger.debug(`Archived: ${fullName}`);
         return response;
       }).catch(error => {
-        console.error(`Failed to archive ${fullName}:`, error.response?.data || error.message);
+        logger.error(`Failed to archive ${fullName}:`, error.response?.data || error.message);
         throw error;
       });
     },
@@ -150,7 +150,7 @@ export const makePrivate = async (req, res) => {
         logger.debug(`Made private: ${fullName}`);
         return response;
       }).catch(error => {
-        console.error(`Failed to make private ${fullName}:`, error.response?.data || error.message);
+        logger.error(`Failed to make private ${fullName}:`, error.response?.data || error.message);
         throw error;
       });
     },
@@ -239,7 +239,7 @@ export const unstarRepos = async (req, res) => {
         logger.debug(`Unstarred: ${fullName}`);
         return response;
       }).catch(error => {
-        console.error(`Failed to unstar ${fullName}:`, error.response?.data || error.message);
+        logger.error(`Failed to unstar ${fullName}:`, error.response?.data || error.message);
         throw error;
       });
     },
