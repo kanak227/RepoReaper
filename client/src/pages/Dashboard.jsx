@@ -16,8 +16,9 @@ const Dashboard = () => {
   const [repos, setRepos] = useState([]);
   const [selected, setSelected] = useState([]);
   const [search, setSearch] = useState("");
-  const [forked, setForked] = useState(false);
-  const [priv, setPriv] = useState(false);
+  const [language, setLanguage] = useState('All Languages');
+  const [visibility, setVisibility] = useState('All');
+  const [forkStatus, setForkStatus] = useState('All');
   const [selectAll, setSelectAll] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("updated");
@@ -124,15 +125,25 @@ const Dashboard = () => {
   };
 
 
-  // Filter repos based on search, forked, and private
+  // build language options (handle null/empty safely)
+  const languageOptions = Array.from(new Set(repos.map(r => (r.language && r.language.trim()) ? r.language : 'Unknown'))).sort();
+
   let filteredRepos = repos.filter((repo) => {
     const searchLower = search.toLowerCase();
     const matchesSearch =
       (repo.name && repo.name.toLowerCase().includes(searchLower)) ||
       (repo.full_name && repo.full_name.toLowerCase().includes(searchLower));
-    const matchesForked = !forked || repo.fork;
-    const matchesPriv = !priv || repo.private;
-    return matchesSearch && matchesForked && matchesPriv;
+
+    const repoLang = (repo.language && repo.language.trim()) ? repo.language : 'Unknown';
+    const matchesLanguage = language === 'All Languages' || language === repoLang;
+
+    const matchesVisibility =
+      visibility === 'All' || (visibility === 'Private' ? Boolean(repo.private) : !repo.private);
+
+    const matchesForkStatus =
+      forkStatus === 'All' || (forkStatus === 'Forked' ? Boolean(repo.fork) : !repo.fork);
+
+    return matchesSearch && matchesLanguage && matchesVisibility && matchesForkStatus;
   });
 
   filteredRepos.sort((a, b) => {
@@ -317,10 +328,13 @@ const Dashboard = () => {
           onSearch={e => setSearch(e.target.value)}
           selectAll={selectAll}
           onSelectAll={handleSelectAll}
-          forked={forked}
-          onForked={() => setForked(f => !f)}
-          priv={priv}
-          onPriv={() => setPriv(p => !p)}
+          languages={['All Languages', ...languageOptions]}
+          language={language}
+          onLanguage={(e) => setLanguage(e.target.value)}
+          visibility={visibility}
+          onVisibility={(e) => setVisibility(e.target.value)}
+          forkStatus={forkStatus}
+          onForkStatus={(e) => setForkStatus(e.target.value)}
         />
       </div>
 

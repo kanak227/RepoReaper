@@ -9,10 +9,13 @@ const SearchBar = ({
   onSearch,
   selectAll,
   onSelectAll,
-  forked,
-  onForked,
-  priv,
-  onPriv
+  languages = [],
+  language,
+  onLanguage,
+  visibility,
+  onVisibility,
+  forkStatus,
+  onForkStatus
 }) => {
   const { mode } = useAppStore();
   
@@ -33,8 +36,8 @@ const SearchBar = ({
           />
         </div>
 
-        {/* Checkboxes on the right side */}
-        <div className="flex flex-row flex-wrap gap-6 items-center shrink-0 mt-1 lg:mt-0">
+        {/* Controls on the right side */}
+        <div className="flex flex-row flex-wrap gap-3 items-center shrink-0 mt-1 lg:mt-0">
           <label className={`flex items-center gap-2 cursor-pointer transition-colors ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
             <input
               type="checkbox"
@@ -45,26 +48,44 @@ const SearchBar = ({
             <span className="text-sm font-medium">Select All</span>
           </label>
 
+          <div className="flex items-center gap-2">
+            <span className={`text-sm font-medium ${mode === 'reaper' ? 'text-blue-100' : 'text-yellow-100'}`}>Language</span>
+            <select
+              value={language}
+              onChange={onLanguage}
+              className={`h-9 px-2 rounded bg-zinc-900/10 text-white text-sm outline-none ${mode === 'reaper' ? 'border-blue-700' : 'border-yellow-700'}`}
+            >
+              {languages.map((lang) => (
+                <option key={lang} value={lang}>{lang}</option>
+              ))}
+            </select>
+          </div>
 
-          <label className={`flex items-center gap-2 cursor-pointer transition-colors ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
-            <input
-              type="checkbox"
-              checked={forked}
-              onChange={onForked}
-              className={(mode === 'reaper' ? styles.customBlueCheckbox : styles.customYellowCheckbox) + ' w-4 h-4'}
-            />
-            <span className="text-sm font-medium">Forked</span>
-          </label>
+          <div className="flex items-center gap-2">
+            <span className={`text-sm font-medium ${mode === 'reaper' ? 'text-blue-100' : 'text-yellow-100'}`}>Visibility</span>
+            <select
+              value={visibility}
+              onChange={onVisibility}
+              className={`h-9 px-2 rounded bg-zinc-900/10 text-white text-sm outline-none ${mode === 'reaper' ? 'border-blue-700' : 'border-yellow-700'}`}
+            >
+              <option value="All">All</option>
+              <option value="Public">Public</option>
+              <option value="Private">Private</option>
+            </select>
+          </div>
 
-          <label className={`flex items-center gap-2 cursor-pointer transition-colors ${mode === 'reaper' ? 'text-blue-100 hover:text-blue-400' : 'text-yellow-100 hover:text-yellow-400'}`}>
-            <input
-              type="checkbox"
-              checked={priv}
-              onChange={onPriv}
-              className={(mode === 'reaper' ? styles.customBlueCheckbox : styles.customYellowCheckbox) + ' w-4 h-4'}
-            />
-            <span className="text-sm font-medium">Private</span>
-          </label>
+          <div className="flex items-center gap-2">
+            <span className={`text-sm font-medium ${mode === 'reaper' ? 'text-blue-100' : 'text-yellow-100'}`}>Forks</span>
+            <select
+              value={forkStatus}
+              onChange={onForkStatus}
+              className={`h-9 px-2 rounded bg-zinc-900/10 text-white text-sm outline-none ${mode === 'reaper' ? 'border-blue-700' : 'border-yellow-700'}`}
+            >
+              <option value="All">All</option>
+              <option value="Forked">Forked</option>
+              <option value="Non-Forked">Non-Forked</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
