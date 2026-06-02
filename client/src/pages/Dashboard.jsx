@@ -17,7 +17,7 @@ import {
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [userConfirmation, setUserConfirmation] = useState('');
-  const { mode } = useAppStore();
+  const { mode, rateLimitState, setRateLimitState } = useAppStore();
   const [repos, setRepos] = useState([]);
   const [selected, setSelected] = useState([]);
   const [search, setSearch] = useState("");
@@ -63,71 +63,126 @@ const Dashboard = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+
+  const processBatch = async (reposToProcess, type, expectedConf, name, past) => {
+    let endpoint = '';
+    if (type === 'delete') endpoint = '/repos/delete';
+    else if (type === 'archive') endpoint = '/repos/archive';
+    else if (type === 'private') endpoint = '/repos/make-private';
+    else if (type === 'unstar') endpoint = '/repos/unstar';
+
+    const loadingToast = toast.loading(`${name} repositories...`);
+    
+    try {
+      const res = type === 'delete' 
+        ? await api.delete(endpoint, { data: { repos: reposToProcess } })
+        : await api.post(endpoint, { repos: reposToProcess });
+        
+      const results = res.data?.results || [];
+      const rateLimitInfo = res.data?.rateLimitInfo;
+
+      const successRepos = results.filter(r => r.status === past).map(r => r.repo);
+      const failedRepos = results.filter(r => r.status === 'failed');
+
+      if (failedRepos.length > 0) {
+        toast.error(getRepoActionMessage(failedRepos), { id: loadingToast });
+        console.error(`Failed:`, failedRepos);
+      } else if (successRepos.length > 0) {
+        toast.success(`Successfully completed action!`, { id: loadingToast });
+      } else {
+        toast.dismiss(loadingToast);
+      }
+
+      if (type === 'delete' || type === 'unstar') {
+        setRepos((prev) => prev.filter((r) => !successRepos.includes(r.full_name)));
+      } else if (type === 'private') {
+        setRepos((prev) => prev.map((r) => successRepos.includes(r.full_name) ? { ...r, private: true } : r));
+      }
+
+      if (rateLimitInfo) {
+        const resumeAt = rateLimitInfo.resetTime 
+          ? rateLimitInfo.resetTime * 1000 
+          : Date.now() + (rateLimitInfo.retryAfter || 60) * 1000;
+          
+        setRateLimitState({
+          resumeAt,
+          remainingRepos: rateLimitInfo.remainingRepos,
+          actionType: type,
+          actionPast: past,
+          actionName: name,
+          expectedConfirmation: expectedConf
+        });
+        
+        toast.error(`Rate limit reached. Auto-resuming later...`, { id: loadingToast });
+      } else {
+        setRateLimitState(null);
+        setSelected([]);
+      }
+
+      setShowModal(false);
+      setUserConfirmation('');
+      setActionType('');
+
+    } catch (err) {
+      console.error(`${name} failed`, err);
+      toast.error(getFriendlyErrorMessage(err), { id: loadingToast });
+      setShowModal(false);
+      setUserConfirmation('');
+      setActionType('');
+      setRateLimitState(null);
+    }
+  };
+
   const confirmAction = async () => {
     let expectedConfirmation = '';
-    let endpoint = '';
-    let actionName = '';
-    let actionPast = '';
+    let name = '';
+    let past = '';
     
     if (actionType === 'delete') {
       expectedConfirmation = 'delete_permanently';
-      endpoint = '/repos/delete';
-      actionName = 'Deleting';
-      actionPast = 'deleted';
+      name = 'Deleting';
+      past = 'deleted';
     } else if (actionType === 'archive') {
       expectedConfirmation = 'archive_repos';
-      endpoint = '/repos/archive';
-      actionName = 'Archiving';
-      actionPast = 'archived';
+      name = 'Archiving';
+      past = 'archived';
     } else if (actionType === 'private') {
       expectedConfirmation = 'make_private';
-      endpoint = '/repos/make-private';
-      actionName = 'Making private';
-      actionPast = 'private';
+      name = 'Making private';
+      past = 'private';
     } else if (actionType === 'unstar') {
       expectedConfirmation = 'unstar_repos';
-      endpoint = '/repos/unstar';
-      actionName = 'Unstarring';
-      actionPast = 'unstarred';
+      name = 'Unstarring';
+      past = 'unstarred';
     }
 
     if (userConfirmation.trim() === expectedConfirmation) {
-      const loadingToast = toast.loading(`${actionName} repositories...`);
-      
-      try {
-        const res = actionType === 'delete' 
-          ? await api.delete(endpoint, { data: { repos: selected } })
-          : await api.post(endpoint, { repos: selected });
-          
-        const successRepos = res.data?.results?.filter(r => r.status === actionPast).map(r => r.repo) || selected;
-        const failedRepos = res.data?.results?.filter(r => r.status === 'failed') || [];
-
-        if (failedRepos.length > 0) {
-          toast.error(getRepoActionMessage(failedRepos), { id: loadingToast });
-          console.error(`Failed:`, failedRepos);
-        } else {
-          toast.success(`Successfully completed action!`, { id: loadingToast });
-        }
-
-        if (actionType === 'delete' || actionType === 'unstar') {
-          setRepos((prev) => prev.filter((r) => !successRepos.includes(r.full_name)));
-        } else if (actionType === 'private') {
-          setRepos((prev) => prev.map((r) => successRepos.includes(r.full_name) ? { ...r, private: true } : r));
-        }
-
-        setSelected([]);
-        setShowModal(false);
-        setUserConfirmation('');
-        setActionType('');
-      } catch (err) {
-        console.error(`${actionName} failed`, err);
-        toast.error(getFriendlyErrorMessage(err), { id: loadingToast });
-        setShowModal(false);
-        setUserConfirmation('');
-        setActionType('');
-      }
+      await processBatch(selected, actionType, expectedConfirmation, name, past);
     }
   };
+
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    if (!rateLimitState) return;
+
+    const interval = setInterval(() => {
+      const remaining = Math.max(0, Math.floor((rateLimitState.resumeAt - Date.now()) / 1000));
+      setTimeLeft(remaining);
+
+      if (remaining === 0) {
+        clearInterval(interval);
+        const { remainingRepos, actionType, expectedConfirmation, actionName, actionPast } = rateLimitState;
+        setRateLimitState(null);
+        processBatch(remainingRepos, actionType, expectedConfirmation, actionName, actionPast);
+      }
+    }, 1000);
+
+    setTimeLeft(Math.max(0, Math.floor((rateLimitState.resumeAt - Date.now()) / 1000)));
+
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rateLimitState]);
 
 
   // Filter repos based on search, forked, and private
@@ -317,6 +372,23 @@ const Dashboard = () => {
 )}
 
 
+
+      {rateLimitState && (
+        <div className="mb-6 bg-red-900/30 border border-red-500 rounded-xl p-4 flex items-center justify-between shadow-lg backdrop-blur-sm">
+          <div className="flex items-center gap-3">
+            <AlertTriangle className="text-red-500 w-6 h-6" />
+            <div>
+              <h3 className="text-red-400 font-bold">Rate Limit Reached</h3>
+              <p className="text-red-200/70 text-sm mt-1">
+                GitHub API rate limit exceeded. Auto-resuming '{rateLimitState.actionName}' for {rateLimitState.remainingRepos.length} repositories.
+              </p>
+            </div>
+          </div>
+          <div className="bg-red-500/20 px-4 py-2 rounded-lg border border-red-500/30">
+            <span className="text-red-400 font-mono font-bold text-xl">{timeLeft}s</span>
+          </div>
+        </div>
+      )}
 
       <div className="mb-6">
         <SearchBar

@@ -63,7 +63,7 @@ export const deleteRepo =  async (req, res) => {
     return res.status(400).json({ error: 'No repositories specified' });
   }
 
-  const results = await bulkRepoAction({
+  const { results, rateLimitInfo } = await bulkRepoAction({
     repos: reposToDelete,
     token,
     successStatus: 'deleted',
@@ -84,7 +84,7 @@ export const deleteRepo =  async (req, res) => {
     },
   });
 
-  res.json({ results });
+  res.json({ results, rateLimitInfo });
 }
 
 export const archiveRepo = async (req, res) => {
@@ -95,7 +95,7 @@ export const archiveRepo = async (req, res) => {
     return res.status(400).json({ error: 'No repositories specified' });
   }
 
-  const results = await bulkRepoAction({
+  const { results, rateLimitInfo } = await bulkRepoAction({
     repos: reposToArchive,
     token,
     successStatus: 'archived',
@@ -120,7 +120,7 @@ export const archiveRepo = async (req, res) => {
     },
   });
 
-  res.json({ results });
+  res.json({ results, rateLimitInfo });
 }
 
 export const makePrivate = async (req, res) => {
@@ -131,7 +131,7 @@ export const makePrivate = async (req, res) => {
     return res.status(400).json({ error: 'No repositories specified' });
   }
 
-  const results = await bulkRepoAction({
+  const { results, rateLimitInfo } = await bulkRepoAction({
     repos: reposToUpdate,
     token,
     successStatus: 'private',
@@ -156,7 +156,7 @@ export const makePrivate = async (req, res) => {
     },
   });
 
-  res.json({ results });
+  res.json({ results, rateLimitInfo });
 }
 
 export const getStarred = async (req, res) => {
@@ -224,7 +224,7 @@ export const unstarRepos = async (req, res) => {
     return res.status(400).json({ error: 'No repositories specified' });
   }
 
-  const results = await bulkRepoAction({
+  const { results, rateLimitInfo } = await bulkRepoAction({
     repos: reposToUnstar,
     token,
     successStatus: 'unstarred',
@@ -245,5 +245,5 @@ export const unstarRepos = async (req, res) => {
     },
   });
 
-  res.json({ results });
+  res.json({ results, rateLimitInfo });
 }

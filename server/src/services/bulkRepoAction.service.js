@@ -14,12 +14,29 @@ export const bulkRepoAction = async ({ repos, token, action, successStatus }) =>
   }
 
   const results = [];
+  let rateLimitInfo = null;
 
-  for (const fullName of repos) {
+  for (let i = 0; i < repos.length; i++) {
+    const fullName = repos[i];
     try {
       await action(fullName, token);
       results.push({ repo: fullName, status: successStatus });
     } catch (error) {
+      if (error.response && (error.response.status === 429 || error.response.status === 403)) {
+        const headers = error.response.headers;
+        const resetTime = headers['x-ratelimit-reset'];
+        const retryAfter = headers['retry-after'];
+        
+        if (resetTime || retryAfter || (error.response.data?.message && error.response.data.message.toLowerCase().includes('rate limit'))) {
+          rateLimitInfo = {
+            resetTime: resetTime ? parseInt(resetTime, 10) : null,
+            retryAfter: retryAfter ? parseInt(retryAfter, 10) : null,
+            remainingRepos: repos.slice(i), // include the one that failed
+          };
+          break; // bail out
+        }
+      }
+
       results.push({
         repo: fullName,
         status: 'failed',
@@ -28,5 +45,5 @@ export const bulkRepoAction = async ({ repos, token, action, successStatus }) =>
     }
   }
 
-  return results;
+  return { results, rateLimitInfo };
 };
