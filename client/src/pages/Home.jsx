@@ -40,11 +40,6 @@ const Home = () => {
 
   return (
     <div className='min-h-screen bg-black relative overflow-hidden'>
-      {/* Radial Background Glow - extended behind navbar */}
-      <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[700px] opacity-30 pointer-events-none">
-        <div className={`absolute inset-0 blur-[120px] rounded-[100%] transition-colors duration-1000 ${mode === 'reaper' ? 'bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600' : 'bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-600'}`} />
-      </div>
-
       <div className="relative z-10">
         <Navbar/>
         
@@ -192,10 +187,6 @@ const Home = () => {
 
         {/* How it Works Section */}
         <section className="py-24 px-4 max-w-[1200px] mx-auto border-t border-gray-900 relative">
-           <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-10 pointer-events-none">
-             <div className={`absolute inset-0 blur-[150px] rounded-full transition-colors duration-1000 ${mode === 'reaper' ? 'bg-blue-600' : 'bg-yellow-500'}`} />
-           </div>
-
           <div className="text-center mb-16 relative z-10">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">How it works</h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">Three simple steps to a cleaner GitHub profile.</p>
@@ -229,8 +220,6 @@ const Home = () => {
         {/* Open Source CTA */}
         <section className="py-24 px-4 max-w-[1000px] mx-auto relative z-20">
           <div className={`w-full rounded-3xl bg-gray-900/40 backdrop-blur-xl border border-gray-800 p-8 md:p-12 shadow-[0_0_40px_rgba(0,0,0,0.3)] transition-colors duration-500 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden ${mode === 'reaper' ? 'hover:border-blue-500/30' : 'hover:border-yellow-500/30'}`}>
-            {/* Glow effect inside the card */}
-            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-10 blur-[100px] pointer-events-none transition-colors duration-1000 ${mode === 'reaper' ? 'bg-gradient-to-r from-blue-600 to-purple-600' : 'bg-gradient-to-r from-yellow-500 to-orange-500'}`}></div>
             
             <div className="text-center md:text-left z-10 flex-1">
               <h2 className="text-3xl font-bold text-white mb-3">Wanna contribute?</h2>

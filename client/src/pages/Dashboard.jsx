@@ -2,13 +2,14 @@ import RepoSkeleton from "../components/RepoSkeleton";
 import { useEffect, useState, useRef } from "react";
 import api from "../utils/api";
 import RepoList from "../components/RepoList";
-import Loader from "../components/Loader";
 import DashboardNavbar from "../components/DashboardNavbar";
 import SearchBar from "../components/SearchBar";
 import Footer from "../components/Footer";
 import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
+
+const MIN_SKELETON_MS = 3200;
 
 
 const Dashboard = () => {
@@ -30,24 +31,38 @@ const Dashboard = () => {
   const [img , setImg] = useState("/logo.png");
 
   useEffect(() => {
+    let active = true;
+
     const fetchRepos = async () => {
       setLoading(true);
+
       try {
         const endpoint = mode === 'reaper' ? "/repos/list" : "/repos/starred";
-        const res = await api.get(endpoint);
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        const minimumDisplayTime = new Promise((resolve) => setTimeout(resolve, MIN_SKELETON_MS));
+        const [res] = await Promise.all([api.get(endpoint), minimumDisplayTime]);
+
+        if (!active) {
+          return;
+        }
+
         setRepos(res.data.repos);
         setUser(res.data.user);
         setImg(res.data.avatar);
         setSelected([]);
-
-        setLoading(false);
       } catch (err) {
         console.error("Error fetching repos:", err);
-        setLoading(false);
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
       }
     };
+
     fetchRepos();
+
+    return () => {
+      active = false;
+    };
   }, [mode]); 
 
   useEffect(() => {
@@ -168,25 +183,25 @@ const Dashboard = () => {
 
   if (loading) {
   return (
-    <div className="min-h-screen p-6 lg:px-20 md:px-10 bg-black">
+    <div className="min-h-screen p-6 lg:px-20 md:px-10 bg-black text-white">
       <div className="mb-8 space-y-5">
         <div className="flex items-center justify-between gap-4">
-          <div className="h-14 w-44 rounded-xl bg-white/5 border border-white/10 animate-pulse"></div>
+          <div className="h-14 w-52 rounded-2xl bg-white/10 border border-white/10 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] animate-pulse"></div>
           <div className="hidden md:flex items-center gap-3">
-            <div className="h-10 w-32 rounded-lg bg-white/5 border border-white/10 animate-pulse"></div>
-            <div className="h-10 w-28 rounded-lg bg-white/5 border border-white/10 animate-pulse"></div>
-            <div className="h-10 w-28 rounded-lg bg-white/5 border border-white/10 animate-pulse"></div>
-            <div className="h-10 w-28 rounded-lg bg-white/5 border border-white/10 animate-pulse"></div>
+            <div className="h-10 w-32 rounded-xl bg-white/10 border border-white/10 animate-pulse"></div>
+            <div className="h-10 w-28 rounded-xl bg-white/10 border border-white/10 animate-pulse"></div>
+            <div className="h-10 w-28 rounded-xl bg-white/10 border border-white/10 animate-pulse"></div>
+            <div className="h-10 w-28 rounded-xl bg-white/10 border border-white/10 animate-pulse"></div>
           </div>
         </div>
 
         <div className="space-y-3 max-w-3xl">
-          <div className="h-12 w-3/4 rounded-2xl bg-white/5 border border-white/10 animate-pulse"></div>
-          <div className="h-5 w-2/3 rounded-xl bg-white/5 border border-white/10 animate-pulse"></div>
+          <div className="h-12 w-3/4 rounded-3xl bg-white/10 border border-white/10 animate-pulse"></div>
+          <div className="h-5 w-2/3 rounded-2xl bg-white/10 border border-white/10 animate-pulse"></div>
         </div>
       </div>
 
-      <RepoSkeleton mode={mode} />
+      <RepoSkeleton mode={mode} count={6} className="mt-4" />
     </div>
   );
   }
