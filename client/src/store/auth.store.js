@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import api from "../utils/api"; 
-const BACKEND_URL = import.meta.env.VITE_API_URL;
+const BACKEND_URL = import.meta.env.VITE_API_URL || import.meta.env.API_URL || 'http://localhost:3000';
 
 export const useAuthStore = create((set) => ({
   isAuthenticated: false,
   user: null,
-  isLoading: false,
+  isLoading: true,
 
   loginwithGithub: () => {
     window.location.href = `${BACKEND_URL}/auth/github`;
@@ -38,3 +38,5 @@ export const useAuthStore = create((set) => ({
 },
 
 }));
+
+

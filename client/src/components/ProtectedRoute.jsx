@@ -1,8 +1,13 @@
 import { useAuthStore } from '../store/auth.store';
 import { Navigate } from 'react-router-dom';
+import Loader from './Loader';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, isLoading } = useAuthStore();
+  if (isLoading) {
+    return <Loader />;
+  }
+
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
@@ -10,5 +15,6 @@ const ProtectedRoute = ({ children }) => {
 };
 
 export default ProtectedRoute;
+
 
 

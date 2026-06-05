@@ -53,10 +53,10 @@ const SearchBar = ({
             <select
               value={language}
               onChange={onLanguage}
-              className={`h-9 px-2 rounded bg-zinc-900/10 text-white text-sm outline-none ${mode === 'reaper' ? 'border-blue-700' : 'border-yellow-700'}`}
+              className={`h-9 px-2 rounded bg-zinc-900/10 text-gray-400 text-sm outline-none ${mode === 'reaper' ? 'border-blue-700' : 'border-yellow-700'}`}
             >
               {languages.map((lang) => (
-                <option key={lang} value={lang}>{lang}</option>
+                <option key={lang} value={lang} className="text-gray-400">{lang}</option>
               ))}
             </select>
           </div>
@@ -66,11 +66,11 @@ const SearchBar = ({
             <select
               value={visibility}
               onChange={onVisibility}
-              className={`h-9 px-2 rounded bg-zinc-900/10 text-white text-sm outline-none ${mode === 'reaper' ? 'border-blue-700' : 'border-yellow-700'}`}
+              className={`h-9 px-2 rounded bg-zinc-900/10 text-gray-400 text-sm outline-none ${mode === 'reaper' ? 'border-blue-700' : 'border-yellow-700'}`}
             >
-              <option value="All">All</option>
-              <option value="Public">Public</option>
-              <option value="Private">Private</option>
+              <option value="All" className="text-gray-400">All</option>
+              <option value="Public" className="text-gray-400">Public</option>
+              <option value="Private" className="text-gray-400">Private</option>
             </select>
           </div>
 
@@ -79,11 +79,11 @@ const SearchBar = ({
             <select
               value={forkStatus}
               onChange={onForkStatus}
-              className={`h-9 px-2 rounded bg-zinc-900/10 text-white text-sm outline-none ${mode === 'reaper' ? 'border-blue-700' : 'border-yellow-700'}`}
+              className={`h-9 px-2 rounded bg-zinc-900/10 text-gray-400 text-sm outline-none ${mode === 'reaper' ? 'border-blue-700' : 'border-yellow-700'}`}
             >
-              <option value="All">All</option>
-              <option value="Forked">Forked</option>
-              <option value="Non-Forked">Non-Forked</option>
+              <option value="All" className="text-gray-400">All</option>
+              <option value="Forked" className="text-gray-400">Forked</option>
+              <option value="Non-Forked" className="text-gray-400">Non-Forked</option>
             </select>
           </div>
         </div>

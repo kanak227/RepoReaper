@@ -1,0 +1,8 @@
+#!/bin/sh
+# Prevent commits on the `kanakmentor` branch
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+if [ "$branch" = "kanakmentor" ]; then
+  echo "ERROR: Commits to branch 'kanakmentor' are blocked locally. Switch to your branch 'mere' before committing." >&2
+  exit 1
+fi
+exit 0

@@ -44,6 +44,14 @@ const apiLimiter = rateLimit({
 app.use('/auth', apiLimiter, authRoutes);
 app.use('/repos', apiLimiter, repoRoutes);
 
+if (isProd) {
+  const staticPath = path.resolve(__dirname, '../../client/dist');
+  app.use(express.static(staticPath));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(staticPath, 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`RepoReaper backend running on port ${PORT}`);

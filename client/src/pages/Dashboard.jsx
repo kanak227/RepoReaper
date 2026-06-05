@@ -125,8 +125,14 @@ const Dashboard = () => {
   };
 
 
-  // build language options (handle null/empty safely)
-  const languageOptions = Array.from(new Set(repos.map(r => (r.language && r.language.trim()) ? r.language : 'Unknown'))).sort();
+  // build language options: include common languages plus repo-detected ones (handle null/empty safely)
+  const commonLanguages = [
+    'Python', 'Java', 'JavaScript', 'C++', 'C#', 'TypeScript', 'Go', 'Ruby', 'PHP', 'Shell'
+  ];
+
+  const detectedLanguages = Array.from(new Set(repos.map(r => (r.language && r.language.trim()) ? r.language : 'Unknown')));
+
+  const languageOptions = Array.from(new Set([...commonLanguages, ...detectedLanguages])).sort((a, b) => a.localeCompare(b));
 
   let filteredRepos = repos.filter((repo) => {
     const searchLower = search.toLowerCase();
@@ -137,8 +143,10 @@ const Dashboard = () => {
     const repoLang = (repo.language && repo.language.trim()) ? repo.language : 'Unknown';
     const matchesLanguage = language === 'All Languages' || language === repoLang;
 
+    const repoIsPrivate = repo.private === true;
     const matchesVisibility =
-      visibility === 'All' || (visibility === 'Private' ? Boolean(repo.private) : !repo.private);
+      visibility === 'All' ||
+      (visibility === 'Private' ? repoIsPrivate : !repoIsPrivate);
 
     const matchesForkStatus =
       forkStatus === 'All' || (forkStatus === 'Forked' ? Boolean(repo.fork) : !repo.fork);
