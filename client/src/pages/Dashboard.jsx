@@ -162,17 +162,35 @@ const Dashboard = () => {
   }, [filteredRepos, selected]);
 
 const exportToCSV = () => {
+  const escapeCSV = (value) => {
+    if (value === null || value === undefined) return '';
+    const str = String(value);
+    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  };
   const selectedRepos = repos.filter(r => selected.includes(r.full_name));
   const headers = ['Name', 'Full Name', 'Private', 'Fork', 'Size', 'Updated At'];
-  const rows = selectedRepos.map(r => [r.name, r.full_name, r.private, r.fork, r.size, r.updated_at]);
-  const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+  const rows = selectedRepos.map(r => [
+    r.name, r.full_name,
+    r.private ? 'true' : 'false',
+    r.fork ? 'true' : 'false',
+    r.size ?? '',
+    r.updated_at ?? ''
+  ]);
+  const csv = [headers, ...rows].map(row => row.map(escapeCSV).join(',')).join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = 'selected-repos.csv';
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 100);
 };
   
   const repoCount = selected.length;
@@ -297,12 +315,13 @@ const exportToCSV = () => {
         placeholder="Type confirmation here"
       />
       <div className="flex justify-end gap-2">
-      <button
-          className="px-4 py-2 border border-green-500 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
-          onClick={exportToCSV}
-        >
-          <Download className="w-4 h-4"/> Export CSV
-        </button>
+    <button
+  className={`px-4 py-2 border border-green-500 rounded-md flex items-center gap-2 ${selected.length === 0 ? 'bg-green-500/30 text-white/50 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+  onClick={exportToCSV}
+  disabled={selected.length === 0}
+>
+  <Download className="w-4 h-4"/> Export CSV
+</button>
         <button
           className="px-4 py-2 border border-white rounded-md hover:bg-gray-400 hover:text-black transition-colors"
           onClick={() => {
