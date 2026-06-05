@@ -247,3 +247,64 @@ export const unstarRepos = async (req, res) => {
 
   res.json({ results });
 }
+
+export const getRepoRisks = async (req, res) => {
+  try {
+    const token = req.token;
+    const { repos } = req.body;
+
+    if (!Array.isArray(repos) || repos.length === 0) {
+      return res.status(400).json({ error: 'No repositories specified' });
+    }
+
+    // Fetch releases count for each repo
+    const reposWithReleases = await Promise.all(
+      repos.map(async (fullName) => {
+        try {
+          const { data: releases } = await axios.get(
+            `https://api.github.com/repos/${fullName}/releases`,
+            {
+              headers: {
+                Authorization: `token ${token}`,
+                Accept: 'application/vnd.github+json',
+              },
+              params: {
+                per_page: 1,
+                page: 1,
+              },
+            }
+          );
+
+          // Check if there are releases by looking at headers or data length
+          // The API returns all releases if we request them, but we only need count
+          let releasesCount = 0;
+          try {
+            const headResponse = await axios.head(
+              `https://api.github.com/repos/${fullName}/releases`,
+              {
+                headers: {
+                  Authorization: `token ${token}`,
+                  Accept: 'application/vnd.github+json',
+                },
+              }
+            );
+            // Extract count from Link header or use array length
+            releasesCount = releases.length || 0;
+          } catch {
+            releasesCount = releases.length || 0;
+          }
+
+          return { fullName, releases_count: releasesCount };
+        } catch (error) {
+          logger.debug(`Could not fetch releases for ${fullName}:`, error.message);
+          return { fullName, releases_count: 0 };
+        }
+      })
+    );
+
+    res.json({ risks: reposWithReleases });
+  } catch (error) {
+    console.error('Error fetching repo risks:', error.message);
+    res.status(500).json({ error: 'Failed to fetch repository risks' });
+  }
+}

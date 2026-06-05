@@ -1,5 +1,5 @@
 import express from 'express';
-import { getList, deleteRepo, archiveRepo, makePrivate, getStarred, unstarRepos } from '../controllers/repo.controller.js';
+import { getList, deleteRepo, archiveRepo, makePrivate, getStarred, unstarRepos, getRepoRisks } from '../controllers/repo.controller.js';
 import { requireAuth } from '../middleware/checkAuth.js';
 
 const router = express.Router();
@@ -10,5 +10,6 @@ router.post('/archive', requireAuth, archiveRepo);
 router.post('/make-private', requireAuth, makePrivate);
 router.get('/starred', requireAuth, getStarred);
 router.post('/unstar', requireAuth, unstarRepos);
+router.post('/analyze-risks', requireAuth, getRepoRisks);
 
 export default router;

@@ -6,6 +6,7 @@ import Loader from "../components/Loader";
 import DashboardNavbar from "../components/DashboardNavbar";
 import SearchBar from "../components/SearchBar";
 import Footer from "../components/Footer";
+import RiskAnalysisSummary from "../components/RiskAnalysisSummary";
 import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
@@ -266,7 +267,7 @@ const Dashboard = () => {
 
       {showModal && (
       <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-    <div className="bg-black border border-red-900 p-10 rounded-xl w-full max-w-xl shadow-lg space-y-4">
+    <div className="bg-black border border-red-900 p-10 rounded-xl w-full max-w-2xl shadow-lg space-y-4 max-h-[90vh] overflow-y-auto">
       <h2 className="text-xl font-bold text-red-600 flex items-center gap-3">
         <AlertTriangle/>Confirm {actionType === 'delete' ? "Deletion" : actionType === 'archive' ? "Archive" : actionType === 'unstar' ? "Unstar" : "Visibility Change"}
       </h2>
@@ -275,11 +276,20 @@ const Dashboard = () => {
          Are you sure you want to{" "} {actionType === 'delete' ? "delete" : actionType === 'archive' ? "archive": actionType === 'unstar'? "unstar" : "make private"}{" "} {repoCount} {repoText}?
       </p>
 
-      <ul className="list-disc pl-6 text-sm text-white/70">
-        {selected.map((repo) => (
-          <li key={repo}>{repo}</li>
-        ))}
-      </ul>
+      {actionType === 'delete' && (
+        <RiskAnalysisSummary 
+          repos={repos.filter(r => selected.includes(r.full_name))} 
+          actionType={actionType}
+        />
+      )}
+
+      <div className="max-h-48 overflow-y-auto">
+        <ul className="list-disc pl-6 text-sm text-white/70">
+          {selected.map((repo) => (
+            <li key={repo}>{repo}</li>
+          ))}
+        </ul>
+      </div>
       <p className="text-base text-red-500">
         Type <code className="font-bold text-red-900 px-1 rounded font-mono">{actionType === 'delete' ? "'delete_permanently'" : actionType === 'archive' ? "'archive_repos'" : actionType === 'unstar' ? "'unstar_repos'" : "'make_private'"}</code> to confirm:
       </p>
