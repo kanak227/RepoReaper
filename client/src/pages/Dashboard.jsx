@@ -5,7 +5,7 @@ import Loader from "../components/Loader";
 import DashboardNavbar from "../components/DashboardNavbar";
 import SearchBar from "../components/SearchBar";
 import Footer from "../components/Footer";
-import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff } from "lucide-react";
+import { AlertTriangle, Trash2, Archive, Lock, StarOff } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
 
@@ -22,8 +22,6 @@ const Dashboard = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("updated");
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const sortRef = useRef(null);
   const [actionType, setActionType] = useState('');
   const [user , setUser] = useState("Guest");
   const [img , setImg] = useState("/logo.png");
@@ -46,17 +44,7 @@ const Dashboard = () => {
       }
     };
     fetchRepos();
-  }, [mode]); 
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (sortRef.current && !sortRef.current.contains(event.target)) {
-        setIsSortOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [mode]);
 
   const confirmAction = async () => {
     let expectedConfirmation = '';
@@ -206,33 +194,6 @@ const Dashboard = () => {
         </div>
 
         <div className="flex gap-3 mt-10 flex-wrap justify-end">
-          <div className="relative hidden md:block" ref={sortRef}>
-            <button
-              onClick={() => setIsSortOpen(!isSortOpen)}
-              className="px-4 py-2 bg-gray-900/80 backdrop-blur-md text-white rounded-lg border border-gray-700 hover:border-blue-500/50 outline-none text-sm cursor-pointer flex items-center justify-between gap-2 shadow-sm transition-all"
-            >
-              <span>{sortBy === 'updated' ? 'Latest Updated' : sortBy === 'size' ? 'Largest Size' : 'Name (A-Z)'}</span>
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isSortOpen ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {isSortOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.8)] bg-gray-900/90 backdrop-blur-xl ring-1 ring-white/10 z-50 border border-gray-800 overflow-hidden transform opacity-100 scale-100 transition-all duration-200">
-                <div className="p-1.5 flex flex-col gap-1">
-                  {['updated', 'size', 'name'].map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => { setSortBy(option); setIsSortOpen(false); }}
-                      className={`flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors ${sortBy === option ? 'bg-blue-600/20 text-blue-400' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}
-                    >
-                      {option === 'updated' ? 'Latest Updated' : option === 'size' ? 'Largest Size' : 'Name (A-Z)'}
-                      {sortBy === option && <Check className="w-4 h-4 text-blue-500" />}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
           {mode === 'reaper' ? (
             <>
               <button
@@ -336,13 +297,15 @@ const Dashboard = () => {
           onSearch={e => setSearch(e.target.value)}
           selectAll={selectAll}
           onSelectAll={handleSelectAll}
-          languages={['All Languages', ...languageOptions]}
+          languages={languageOptions}
           language={language}
           onLanguage={(e) => setLanguage(e.target.value)}
           visibility={visibility}
           onVisibility={(e) => setVisibility(e.target.value)}
           forkStatus={forkStatus}
           onForkStatus={(e) => setForkStatus(e.target.value)}
+          sortBy={sortBy}
+          onSort={(sortValue) => setSortBy(sortValue)}
         />
       </div>
 
