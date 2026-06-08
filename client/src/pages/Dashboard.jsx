@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import api from "../utils/api";
 import RepoList from "../components/RepoList";
+import EmptyState from "../components/EmptyState";
 import Loader from "../components/Loader";
 import DashboardNavbar from "../components/DashboardNavbar";
 import SearchBar from "../components/SearchBar";
@@ -8,6 +9,10 @@ import Footer from "../components/Footer";
 import { AlertTriangle, Trash2, Archive, Lock, StarOff } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
+import {
+  getFriendlyErrorMessage,
+  getRepoActionMessage,
+} from "../utils/errors";
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
@@ -40,6 +45,7 @@ const Dashboard = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching repos:", err);
+        toast.error(getFriendlyErrorMessage(err));
         setLoading(false);
       }
     };
@@ -86,7 +92,7 @@ const Dashboard = () => {
         const failedRepos = res.data?.results?.filter(r => r.status === 'failed') || [];
 
         if (failedRepos.length > 0) {
-          toast.error(`Failed to complete action for some repositories. Check console.`, { id: loadingToast });
+          toast.error(getRepoActionMessage(failedRepos), { id: loadingToast });
           console.error(`Failed:`, failedRepos);
         } else {
           toast.success(`Successfully completed action!`, { id: loadingToast });
@@ -104,7 +110,7 @@ const Dashboard = () => {
         setActionType('');
       } catch (err) {
         console.error(`${actionName} failed`, err);
-        toast.error(err.response?.data?.error || "Action failed due to an error.", { id: loadingToast });
+        toast.error(getFriendlyErrorMessage(err), { id: loadingToast });
         setShowModal(false);
         setUserConfirmation('');
         setActionType('');
@@ -167,15 +173,16 @@ const Dashboard = () => {
     const allFilteredSelected = filteredRepos.length > 0 && filteredRepos.every(r => selected.includes(r.full_name));
     setSelectAll(allFilteredSelected);
   }, [filteredRepos, selected]);
-
-
   const repoCount = selected.length;
+  const repoText = repoCount === 1 ? "repository" : "repositories";
 
-  const repoText =
-  repoCount === 1
-    ? "repository"
-    : "repositories";
-    
+
+  const noRepos = repos.length === 0;
+
+  useEffect(() => {
+    if (noRepos) setIsSortOpen(false);
+  }, [noRepos]);
+
   if (loading) return <Loader/>
 
   return (
@@ -294,7 +301,10 @@ const Dashboard = () => {
       <div className="mb-6">
         <SearchBar
           search={search}
-          onSearch={e => setSearch(e.target.value)}
+          onSearch={(e) => {
+            setSearch(e.target.value);
+            setSelectAll(false);
+          }}
           selectAll={selectAll}
           onSelectAll={handleSelectAll}
           languages={languageOptions}
@@ -309,16 +319,29 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="flex justify-between items-center px-3 text-sm text-gray-500 mb-1">
-          <p>Selected : {selected.length}</p>
-          <p>
-            Total: {filteredRepos.length}
-          </p>
-        </div>
-
-      <div className="mb-12">
-        <RepoList repos={filteredRepos} selected={selected} setSelected={setSelected} />
-      </div>
+      {filteredRepos.length > 0 ? (
+        <>
+          <div className="flex justify-between items-center px-3 text-sm text-gray-500 mb-1">
+            <p>Selected : {selected.length}</p>
+            <p>Total: {filteredRepos.length}</p>
+          </div>
+          <div className="mb-12">
+            <RepoList repos={filteredRepos} selected={selected} setSelected={setSelected} />
+          </div>
+        </>
+      ) : (
+        <EmptyState
+          mode={mode}
+          reposExist={repos.length > 0}
+          hasActiveFilters={!!(search || forked || priv)}
+          onResetFilters={() => {
+            setSearch("");
+            setForked(false);
+            setPriv(false);
+            setSelected([]);
+          }}
+        />
+      )}
       <Footer/>
     </div>
   );
