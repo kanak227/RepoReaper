@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import api from '../utils/api';
 import Navbar from '../components/Navbar';
 import Button from '../components/decos/Button';
 import { ArrowRight, Trash2, Archive, Lock, Zap, Shield, FileDown, ServerOff, Code, Github, Star, StarOff } from 'lucide-react';
@@ -29,6 +30,9 @@ const StepCard = ({ number, title, desc, mode }) => (
 );
 
 const Home = () => {
+  useEffect(() => {
+    api.get('/ping').catch(() => {});
+  }, []);
   const { loginwithGithub } = useAuthStore();
   const { mode } = useAppStore();
   const [isLoggingIn, setIsLoggingIn] = React.useState(false);
