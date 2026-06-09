@@ -45,6 +45,10 @@ const apiLimiter = rateLimit({
 app.use('/auth', apiLimiter, authRoutes);
 app.use('/repos', apiLimiter, repoRoutes);
 
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
+
 
 app.listen(PORT, () => {
   logger.info(`RepoReaper backend running on port ${PORT}`);
