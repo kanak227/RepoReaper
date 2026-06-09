@@ -17,7 +17,7 @@ import {
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [userConfirmation, setUserConfirmation] = useState('');
-  const { mode } = useAppStore();
+  const { mode, safeList } = useAppStore();
   const [repos, setRepos] = useState([]);
   const [selected, setSelected] = useState([]);
   const [search, setSearch] = useState("");
@@ -154,8 +154,11 @@ const Dashboard = () => {
       // Deselect all filtered
       setSelected((prev) => prev.filter((name) => !filteredRepos.some(r => r.full_name === name)));
     } else {
-      // Select all filtered
-      const filteredNames = filteredRepos.map(r => r.full_name);
+      // Select all filtered, excluding safe repos
+      const safeSafeList = safeList || [];
+      const filteredNames = filteredRepos
+        .filter(r => !safeSafeList.includes(r.full_name))
+        .map(r => r.full_name);
       setSelected((prev) => Array.from(new Set([...prev, ...filteredNames])));
     }
     setSelectAll(!selectAll);
@@ -163,9 +166,11 @@ const Dashboard = () => {
 
   // Keep selectAll in sync with filtered selection
   useEffect(() => {
-    const allFilteredSelected = filteredRepos.length > 0 && filteredRepos.every(r => selected.includes(r.full_name));
+    const safeSafeList = safeList || [];
+    const selectableRepos = filteredRepos.filter(r => !safeSafeList.includes(r.full_name));
+    const allFilteredSelected = selectableRepos.length > 0 && selectableRepos.every(r => selected.includes(r.full_name));
     setSelectAll(allFilteredSelected);
-  }, [filteredRepos, selected]);
+  }, [filteredRepos, selected, safeList]);
   const repoCount = selected.length;
   const repoText = repoCount === 1 ? "repository" : "repositories";
 
@@ -365,3 +370,5 @@ const Dashboard = () => {
 
 
 export default Dashboard;
+
+
