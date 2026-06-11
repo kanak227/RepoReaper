@@ -95,18 +95,25 @@ const Dashboard = () => {
       const loadingToast = toast.loading(`${actionName} repositories...`);
       
       try {
-        const res = actionType === 'delete' 
+        const res = actionType === 'delete'
           ? await api.delete(endpoint, { data: { repos: selected } })
           : await api.post(endpoint, { repos: selected });
-          
+
         const successRepos = res.data?.results?.filter(r => r.status === actionPast).map(r => r.repo) || selected;
         const failedRepos = res.data?.results?.filter(r => r.status === 'failed') || [];
+        const rateLimitPause = res.data?.rateLimit;
 
         if (failedRepos.length > 0) {
           toast.error(getRepoActionMessage(failedRepos), { id: loadingToast });
           console.error(`Failed:`, failedRepos);
         } else {
           toast.success(`Successfully completed action!`, { id: loadingToast });
+        }
+
+        if (rateLimitPause?.pauseSeconds) {
+          toast.error(
+            `GitHub API rate limit reached. Paused for ${rateLimitPause.pauseSeconds} seconds and retried automatically.`
+          );
         }
 
         if (actionType === 'delete' || actionType === 'unstar') {
