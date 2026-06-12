@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import { AlertTriangle, Trash2, Archive, Lock, ChevronDown, Check, StarOff } from "lucide-react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
+import { useHistoryStore } from '../store/history.store';
 import {
   getFriendlyErrorMessage,
   getRepoActionMessage,
@@ -18,6 +19,7 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [userConfirmation, setUserConfirmation] = useState('');
   const { mode, safeList } = useAppStore();
+  const { addHistoryEntry } = useHistoryStore();
   const [repos, setRepos] = useState([]);
   const [selected, setSelected] = useState([]);
   const [search, setSearch] = useState("");
@@ -108,6 +110,16 @@ const Dashboard = () => {
         } else {
           toast.success(`Successfully completed action!`, { id: loadingToast });
         }
+
+        addHistoryEntry({
+          id: Date.now(),
+          timestamp: new Date().toISOString(),
+          actionType: actionName,
+          successCount: successRepos.length,
+          failedCount: failedRepos.length,
+          successfulRepos: successRepos,
+          failedRepos: failedRepos.map(r => r.repo)
+        });
 
         if (actionType === 'delete' || actionType === 'unstar') {
           setRepos((prev) => prev.filter((r) => !successRepos.includes(r.full_name)));
