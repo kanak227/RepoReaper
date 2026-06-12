@@ -6,6 +6,13 @@ export const useAppStore = create(
     (set) => ({
       mode: 'reaper', // 'reaper' or 'sweeper'
       setMode: (mode) => set({ mode }),
+      safeList: [],
+      toggleSafeRepo: (repoFullName) =>
+        set((state) => ({
+          safeList: state.safeList.includes(repoFullName)
+            ? state.safeList.filter((name) => name !== repoFullName)
+            : [...state.safeList, repoFullName],
+        })),
     }),
     {
       name: 'app-storage', // name of the item in the storage (must be unique)

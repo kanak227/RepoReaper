@@ -1,15 +1,16 @@
 import { formatDistanceToNow } from 'date-fns';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Shield } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
 
 const RepoList = ({ repos, selected, setSelected }) => {
-  const { mode } = useAppStore();
+  const { mode, safeList, toggleSafeRepo } = useAppStore();
   const [copiedId, setCopiedId] = useState(null);
   const copyResetTimerRef = useRef(null);
 
   const toggleSelect = (fullName) => {
+    if (safeList && safeList.includes(fullName)) return;
     setSelected((prev) =>
       prev.includes(fullName)
         ? prev.filter((r) => r !== fullName)
@@ -81,17 +82,20 @@ const RepoList = ({ repos, selected, setSelected }) => {
         {repos.map((repo) => {
           const isSelected = selected.includes(repo.full_name);
           const isCopied = copiedId === repo.id;
+          const isSafe = safeList && safeList.includes(repo.full_name);
 
           return (
             <div
               key={repo.id}
               onClick={() => toggleSelect(repo.full_name)}
               className={`flex flex-col p-4 rounded-xl cursor-pointer transition-all duration-200 border ${
-                isSelected
-                  ? mode === 'reaper'
-                    ? 'bg-blue-900/40 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)] scale-[0.98]'
-                    : 'bg-yellow-900/40 border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.3)] scale-[0.98]'
-                  : 'bg-black/40 border-gray-800 hover:border-gray-600 hover:bg-gray-900/60'
+                isSafe
+                  ? 'bg-gray-900/20 border-gray-800 opacity-60 hover:opacity-100'
+                  : isSelected
+                    ? mode === 'reaper'
+                      ? 'bg-blue-900/40 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)] scale-[0.98]'
+                      : 'bg-yellow-900/40 border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.3)] scale-[0.98]'
+                    : 'bg-black/40 border-gray-800 hover:border-gray-600 hover:bg-gray-900/60'
               }`}
             >
               <div className="flex justify-between items-start mb-2">
@@ -99,6 +103,24 @@ const RepoList = ({ repos, selected, setSelected }) => {
                   <h3 className="text-white font-semibold truncate" title={repo.name}>
                     {repo.name}
                   </h3>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleSafeRepo(repo.full_name);
+                      if (!isSafe && isSelected) {
+                        setSelected((prev) => prev.filter((r) => r !== repo.full_name));
+                      }
+                    }}
+                    className={`flex-shrink-0 rounded p-1 -m-1 transition-colors hover:bg-white/5 ${
+                      isSafe
+                        ? 'text-emerald-500'
+                        : 'text-gray-600 hover:text-emerald-400'
+                    }`}
+                    title={isSafe ? "Unpin (Remove from Safe-List)" : "Pin (Add to Safe-List)"}
+                  >
+                    <Shield className="w-4 h-4" />
+                  </button>
 
                   <button
                     onClick={(e) => handleCopy(e, repo)}
@@ -123,14 +145,17 @@ const RepoList = ({ repos, selected, setSelected }) => {
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <div
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      isSelected
-                        ? mode === 'reaper'
-                          ? 'border-blue-400 bg-blue-500'
-                          : 'border-yellow-400 bg-yellow-500'
-                        : 'border-gray-600'
+                      isSafe
+                        ? 'border-gray-700 bg-gray-800/50'
+                        : isSelected
+                          ? mode === 'reaper'
+                            ? 'border-blue-400 bg-blue-500'
+                            : 'border-yellow-400 bg-yellow-500'
+                          : 'border-gray-600'
                     }`}
                   >
-                    {isSelected && (
+                    {isSafe && <Shield className="w-3 h-3 text-emerald-500/50" />}
+                    {isSelected && !isSafe && (
                       <svg
                         className={`w-3 h-3 ${mode === 'reaper' ? 'text-white' : 'text-black'}`}
                         fill="none"
