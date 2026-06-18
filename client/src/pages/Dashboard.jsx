@@ -112,7 +112,7 @@ const Dashboard = () => {
         }
 
         addHistoryEntry({
-          id: Date.now(),
+          id: crypto.randomUUID(),
           timestamp: new Date().toISOString(),
           actionType: actionName,
           successCount: successRepos.length,

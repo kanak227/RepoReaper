@@ -67,17 +67,26 @@ const HistoryItem = ({ entry }) => {
 const BulkHistoryPanel = ({ isOpen, onClose }) => {
   const { history, clearHistory } = useHistoryStore();
 
+  const escapeCsv = (field) => {
+    if (field == null) return '""';
+    const str = String(field);
+    if (str.includes('"') || str.includes(',') || str.includes('\n')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  };
+
   const exportCSV = () => {
     if (history.length === 0) return;
     const header = ['ID', 'Timestamp', 'Action Type', 'Success Count', 'Failed Count', 'Successful Repos', 'Failed Repos'];
     const rows = history.map(entry => [
-      entry.id,
-      entry.timestamp,
-      entry.actionType,
-      entry.successCount,
-      entry.failedCount,
-      `"${(entry.successfulRepos || []).join(';')}"`,
-      `"${(entry.failedRepos || []).join(';')}"`
+      escapeCsv(entry.id),
+      escapeCsv(entry.timestamp),
+      escapeCsv(entry.actionType),
+      escapeCsv(entry.successCount),
+      escapeCsv(entry.failedCount),
+      escapeCsv((entry.successfulRepos || []).join(';')),
+      escapeCsv((entry.failedRepos || []).join(';'))
     ]);
     
     const csvContent = [header, ...rows].map(e => e.join(',')).join("\n");
@@ -89,6 +98,7 @@ const BulkHistoryPanel = ({ isOpen, onClose }) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const exportJSON = () => {
@@ -102,6 +112,7 @@ const BulkHistoryPanel = ({ isOpen, onClose }) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
