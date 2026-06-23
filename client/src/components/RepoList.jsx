@@ -1,10 +1,11 @@
+import RepoSkeleton from "./RepoSkeleton";
 import { formatDistanceToNow } from 'date-fns';
 import { Copy, Check, Shield } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAppStore } from '../store/app.store';
 
-const RepoList = ({ repos, selected, setSelected }) => {
+const RepoList = ({ repos, selected, setSelected, loading }) => {
   const { mode, safeList, toggleSafeRepo } = useAppStore();
   const [copiedId, setCopiedId] = useState(null);
   const copyResetTimerRef = useRef(null);
@@ -76,6 +77,15 @@ const RepoList = ({ repos, selected, setSelected }) => {
     return `${(kb / 1024).toFixed(1)} MB`;
   };
 
+  if (loading) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {Array.from({ length: 9 }).map((_, index) => (
+        <RepoSkeleton key={index} />
+      ))}
+    </div>
+  );
+}
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

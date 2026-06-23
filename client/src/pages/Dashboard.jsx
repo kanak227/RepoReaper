@@ -181,7 +181,7 @@ const Dashboard = () => {
     if (noRepos) setIsSortOpen(false);
   }, [noRepos]);
 
-  if (loading) return <Loader/>
+  // if (loading) return <Loader/>
 
   return (
     <div className="min-h-screen p-6 lg:px-20 md:px-10">
@@ -340,14 +340,28 @@ const Dashboard = () => {
         />
       </div>
 
-      {filteredRepos.length > 0 ? (
+    {loading ? (
+  <div className="mb-12">
+    <RepoList
+      repos={[]}
+      selected={selected}
+      setSelected={setSelected}
+      loading={true}
+    />
+  </div>
+) : filteredRepos.length > 0 ? (
         <>
           <div className="flex justify-between items-center px-3 text-sm text-gray-500 mb-1">
             <p>Selected : {selected.length}</p>
             <p>Total: {filteredRepos.length}</p>
           </div>
           <div className="mb-12">
-            <RepoList repos={filteredRepos} selected={selected} setSelected={setSelected} />
+            <RepoList
+  repos={filteredRepos}
+  selected={selected}
+  setSelected={setSelected}
+  loading={loading}
+/>
           </div>
         </>
       ) : (
