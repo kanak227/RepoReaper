@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import api from "../utils/api"; 
-const BACKEND_URL = import.meta.env.VITE_API_URL;
+const BACKEND_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '');
 
 export const useAuthStore = create((set) => ({
   isAuthenticated: false,
