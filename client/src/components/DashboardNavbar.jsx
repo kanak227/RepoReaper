@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../store/auth.store';
 import { useAppStore } from '../store/app.store';
-import { LogOut, Trash2, Star } from 'lucide-react';
+import { LogOut, Trash2, Star, History } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import BulkHistoryPanel from './BulkHistoryPanel';
 
 const DashboardNavbar = ({img, user}) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [historyOpen, setHistoryOpen] = useState(false);
     const { logout } = useAuthStore();
     const { mode, setMode } = useAppStore();
     const dropdownRef = useRef(null);
@@ -57,7 +59,14 @@ const DashboardNavbar = ({img, user}) => {
           </div>
 
           {/* Right side login*/}
-          <div className="relative" ref={dropdownRef}>
+          <div className="flex items-center gap-2 sm:gap-4 relative" ref={dropdownRef}>
+            <button
+              onClick={() => setHistoryOpen(true)}
+              className={`p-2 rounded-full transition-colors ${mode === 'reaper' ? 'bg-blue-900/30 text-blue-400 hover:bg-blue-600/30 hover:text-blue-300' : 'bg-yellow-900/30 text-yellow-500 hover:bg-yellow-600/30 hover:text-yellow-400'}`}
+              title="Bulk Action History"
+            >
+              <History className="w-5 h-5" />
+            </button>
             <div 
               className={`rounded-full sm:px-2 p-[1.2px] md:mr-[10px] lg:mr-[50px] cursor-pointer transition-all ${mode === 'reaper' ? 'shadow-[inset_0_0_6px_#3b82f6] hover:shadow-[inset_0_0_10px_#3b82f6]' : 'shadow-[inset_0_0_6px_#eab308] hover:shadow-[inset_0_0_10px_#eab308]'}`}
               onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -96,6 +105,7 @@ const DashboardNavbar = ({img, user}) => {
           </div>
         </div>
       </div>
+      <BulkHistoryPanel isOpen={historyOpen} onClose={() => setHistoryOpen(false)} />
     </div>
   )
 }
