@@ -23,19 +23,19 @@
 
 ## 📚 Table of Contents
 
-- [📖 Overview](#-overview)
-- [🌐 Live Demo](#-live-demo)
-- [📸 Screenshots](#-screenshots)
-- [🏗️ System Architecture](#️-system-architecture)
-- [🚀 Features](#-features)
-- [⚙️ Tech Stack](#️-tech-stack)
-- [🧪 Local Setup](#-local-setup)
-- [🛠️ Installation](#️-installation)
-- [▶️ Running the Application](#️-running-the-application)
-- [🤝 Contributing](#-contributing)
-- [🧯 Troubleshooting](#-troubleshooting)
-- [📄 License](#-license)
-- [🙌 Acknowledgements](#-acknowledgements)
+- [📖 Overview](#overview)
+- [🌐 Live Demo](#live-demo)
+- [📸 Screenshots](#screenshots)
+- [🏗️ System Architecture](#system-architecture)
+- [🚀 Features](#features)
+- [⚙️ Tech Stack](#tech-stack)
+- [🧪 Local Setup](#local-setup)
+- [🛠️ Installation](#installation)
+- [▶️ Running the Application](#running-the-application)
+- [🤝 Contributing](#contributing)
+- [🧯 Troubleshooting](#troubleshooting)
+- [📄 License](#license)
+- [🙌 Acknowledgements](#acknowledgements)
 
 ---
 
