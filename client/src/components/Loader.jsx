@@ -1,10 +1,11 @@
 import React from "react";
 import { Github } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useAppStore } from "../store/app.store";
 
 const Loader = () => {
   const { mode } = useAppStore();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white">
@@ -18,12 +19,16 @@ const Loader = () => {
               ? "border-blue-500"
               : "border-yellow-500"
           }`}
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "linear",
-          }}
+          animate={shouldReduceMotion ? {} : { rotate: 360 }}
+          transition={
+            shouldReduceMotion
+            ? {}
+            : {
+              duration: 3,
+              repeat: Infinity,
+              ease: "linear",
+            }
+          }
         />
 
         <motion.div
@@ -32,14 +37,17 @@ const Loader = () => {
               ? "border-purple-500"
               : "border-orange-500"
           }`}
-          animate={{ rotate: -360 }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "linear",
-          }}
+          animate={shouldReduceMotion ? {} : { rotate: -360 }}
+          transition={
+            shouldReduceMotion
+            ? {}
+            : {
+              duration: 2,
+              repeat: Infinity,
+              ease: "linear",
+            }
+          }
         />
-
         <Github
           className={`w-10 h-10 ${
             mode === "reaper"
@@ -73,62 +81,24 @@ const Loader = () => {
         )}
       </motion.h1>
 
-      {/* Contribution Grid */}
-      <div className="grid grid-cols-5 gap-1 mb-6">
-        {Array.from({ length: 15 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className={`w-3 h-3 rounded-sm border ${
-              mode === "reaper"
-                ? "border-blue-500/20"
-                : "border-yellow-500/20"
-            }`}
-            initial={{
-              backgroundColor: "#2a2a32",
-              opacity: 0.35,
-              scale: 1,
-            }}
-            animate={{
-              backgroundColor:
-                mode === "reaper"
-                  ? [
-                      "#2a2a32",
-                      "#2563eb",
-                      "#8b5cf6",
-                      "#2a2a32",
-                    ]
-                  : [
-                      "#2a2a32",
-                      "#eab308",
-                      "#f59e0b",
-                      "#2a2a32",
-                    ],
-              opacity: [0.35, 1, 1, 0.35],
-              scale: [1, 1.08, 1],
-            }}
-            transition={{
-              duration: 1.8,
-              repeat: Infinity,
-              repeatDelay: 0.4,
-              delay:
-                (i % 5) * 0.12 +
-                Math.floor(i / 5) * 0.18,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
-
       {/* Loading Text */}
       <motion.p
         className="text-slate-400 text-base"
-        animate={{
-          opacity: [0.4, 1, 0.4],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-        }}
+        animate={
+          shouldReduceMotion
+          ? {}
+          : {
+            opacity: [0.4, 1, 0.4],
+          }
+        }
+        transition={
+          shouldReduceMotion
+          ? {}
+          : {
+            duration: 2,
+            repeat: Infinity,
+          }
+        }
       >
         {mode === "reaper"
           ? "Mapping the graveyard..."
