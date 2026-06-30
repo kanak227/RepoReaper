@@ -1,10 +1,14 @@
+import React, { useEffect,
+   useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Loader from "./components/Loader";
-import { useEffect, useState } from "react";
 import { useAuthStore } from "./store/auth.store";
 import ProtectedRoute from "./components/ProtectedRoute";
+ 
+// 1. Import the RateLimitBanner component
+import { RateLimitBanner } from "./components/RateLimitBanner";
 
 function App() {
 
@@ -30,17 +34,26 @@ function App() {
   if (loading) return <Loader />
 
 
-  return (
-    <BrowserRouter>
+  return ( 
+    <>
+    {/* 2. Placing the banner inside the root fragment wrapper */}
+    <RateLimitBanner />
+     
+     {/* 3. The rest of your app's routing and components */}
+         <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={
+        <Route 
+        path="/dashboard" 
+        element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
-        } />
+        } 
+        />
       </Routes>
     </BrowserRouter>
+  </>
   );
 }
 
