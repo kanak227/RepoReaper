@@ -1,55 +1,112 @@
-import React from 'react'
-import { Github } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { useAppStore } from '../store/app.store'
+import React from "react";
+import { Github } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useAppStore } from "../store/app.store";
 
 const Loader = () => {
   const { mode } = useAppStore();
-  
+  const shouldReduceMotion = useReducedMotion();
+
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white gap-6">
-      {/* Animated Logo text */}
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white">
+
+      {/* Dual Sweep Arc */}
+      <div className="relative flex items-center justify-center w-28 h-28 mb-6">
+
+        <motion.div
+          className={`absolute w-28 h-28 rounded-full border-t-[3px] border-r-[3px] ${
+            mode === "reaper"
+              ? "border-blue-500"
+              : "border-yellow-500"
+          }`}
+          animate={shouldReduceMotion ? {} : { rotate: 360 }}
+          transition={
+            shouldReduceMotion
+            ? {}
+            : {
+              duration: 3,
+              repeat: Infinity,
+              ease: "linear",
+            }
+          }
+        />
+
+        <motion.div
+          className={`absolute w-20 h-20 rounded-full border-b-[3px] border-l-[3px] ${
+            mode === "reaper"
+              ? "border-purple-500"
+              : "border-orange-500"
+          }`}
+          animate={shouldReduceMotion ? {} : { rotate: -360 }}
+          transition={
+            shouldReduceMotion
+            ? {}
+            : {
+              duration: 2,
+              repeat: Infinity,
+              ease: "linear",
+            }
+          }
+        />
+        <Github
+          className={`w-10 h-10 ${
+            mode === "reaper"
+              ? "text-white"
+              : "text-yellow-100"
+          }`}
+        />
+      </div>
+
+      {/* Logo */}
       <motion.h1
-        className="text-4xl sm:text-5xl font-bold tracking-tight"
-        initial={{ opacity: 0, y: 20 }}
+        className="text-3xl sm:text-4xl font-bold tracking-tight mb-5"
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.6 }}
       >
-        {mode === 'reaper' ? (
-          <>Repo<span className="bg-gradient-to-r from-blue-500 via-blue-600 to-purple-500 bg-clip-text text-transparent">Reaper</span></>
+        {mode === "reaper" ? (
+          <>
+            Repo
+            <span className="bg-gradient-to-r from-blue-500 via-blue-600 to-purple-500 bg-clip-text text-transparent">
+              Reaper
+            </span>
+          </>
         ) : (
-          <>Star<span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 bg-clip-text text-transparent">Sweeper</span></>
+          <>
+            Star
+            <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 bg-clip-text text-transparent">
+              Sweeper
+            </span>
+          </>
         )}
       </motion.h1>
 
-      {/* Animated rotating GitHub icon */}
-      <motion.div
-        className={`p-6 rounded-full border-2 transition-colors duration-500 ${mode === 'reaper' ? 'border-blue-500 shadow-lg shadow-blue-700/30' : 'border-yellow-500 shadow-lg shadow-yellow-700/30'}`}
-        animate={{ rotate: 360 }}
-        transition={{
-          repeat: Infinity,
-          ease: "linear",
-          duration: 2,
-        }}
+      {/* Loading Text */}
+      <motion.p
+        className="text-slate-400 text-base"
+        animate={
+          shouldReduceMotion
+          ? {}
+          : {
+            opacity: [0.4, 1, 0.4],
+          }
+        }
+        transition={
+          shouldReduceMotion
+          ? {}
+          : {
+            duration: 2,
+            repeat: Infinity,
+          }
+        }
       >
-        <Github className={`w-12 h-12 transition-colors duration-500 ${mode === 'reaper' ? 'text-blue-600' : 'text-yellow-500'}`} />
-      </motion.div>
+        {mode === "reaper"
+          ? "Mapping the graveyard..."
+          : "Charting the stars..."}
+      </motion.p>
 
-      {/* Loading text with pulsing dots */}
-      <motion.div
-        className="text-lg text-slate-300 tracking-wide"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0.2, 1, 0.2] }}
-        transition={{
-          repeat: Infinity,
-          duration: 2,
-          ease: "easeInOut",
-        }}
-      >
-        {mode === 'reaper' ? 'Reaping your repos...' : 'Sweeping your stars...'}
-      </motion.div>
     </div>
-  )
-}
+  );
+};
 
-export default Loader
+export default Loader;
